@@ -1,5 +1,4 @@
 import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
-import 'package:flutter_bloc_template/data/model/home_screen/item_list_model.dart';
 import 'package:flutter_bloc_template/presentation/screens/details_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/home_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/splash_screen.dart';
