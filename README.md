@@ -1,6 +1,6 @@
-# flutter_tast
+# flutter bloc templete
 
-A new Flutter project.
+A flutter bloc templete.
 
 ## Getting Started
 
