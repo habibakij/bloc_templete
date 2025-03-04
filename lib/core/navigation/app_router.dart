@@ -18,11 +18,12 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => HomeScreen(),
     ),
     GoRoute(
-      path: AppRoutes.DETAILS_SCREEN,
+      path: "${AppRoutes.DETAILS_SCREEN}/:id",
       name: AppRoutes.DETAILS_SCREEN,
       builder: (context, state) {
-        final item = state.extra as ItemListModel;
-        return DetailsScreen(item: item);
+        final int itemId =
+            int.parse(state.pathParameters['id']!); // Get itemId from path
+        return DetailsScreen(itemId: itemId);
       },
     ),
   ],

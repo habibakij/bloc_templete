@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
         },
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            if (state is ItemLoading) {
+            if (state is ItemLoading || state is HomeInitial) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is ItemLoaded) {
               return ListView.separated(
@@ -42,7 +42,10 @@ class HomeScreen extends StatelessWidget {
                     subtitle: Text(item.title ?? "",
                         style: AppTextStyles.bodyTextStyle()),
                     onTap: () {
-                      context.push(AppRoutes.DETAILS_SCREEN, extra: item);
+                      context.pushNamed(AppRoutes.DETAILS_SCREEN,
+                          pathParameters: {'id': item.id.toString()});
+
+                      //context.goNamed(AppRoutes.DETAILS_SCREEN, extra: item.id);
                     },
                   );
                 },

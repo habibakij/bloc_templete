@@ -1,10 +1,9 @@
 import 'package:flutter_bloc_template/core/network/api_client.dart';
-import 'package:flutter_bloc_template/data/model/home_screen/item_list_model.dart';
+import 'package:flutter_bloc_template/data/model/details_screen/item_details_model.dart';
 
 class DetailsScreenRepository {
-  Future<List<ItemListModel>> fetchItems() async {
-    final response = await ApiClient.get("todos/");
-    final List data = response.data;
-    return data.map((e) => ItemListModel.fromJson(e)).toList();
+  Future<ItemDetailsModel> fetchItemDetailsData({itemID}) async {
+    final response = await ApiClient.get("todos/$itemID");
+    return itemDetailsModelFromJson(response.toString());
   }
 }
