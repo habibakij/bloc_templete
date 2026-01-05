@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_template/app.dart';
 
-void main() {
+import 'app.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //await dependencyInjection();
   runApp(const MyApp());
 }

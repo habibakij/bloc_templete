@@ -4,25 +4,26 @@ import 'package:flutter_bloc_template/presentation/screens/home_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
+import 'custom_transition.dart';
+
 final GoRouter appRouter = GoRouter(
   routes: [
     GoRoute(
       path: AppRoutes.SPLASH_SCREEN,
       name: AppRoutes.SPLASH_SCREEN,
-      builder: (context, state) => SplashScreen(),
+      pageBuilder: (context, state) => customTransition(state: state, child: SplashScreen()),
     ),
     GoRoute(
       path: AppRoutes.HOME_SCREEN,
       name: AppRoutes.HOME_SCREEN,
-      builder: (context, state) => HomeScreen(),
+      pageBuilder: (context, state) => customTransition(state: state, child: HomeScreen()),
     ),
     GoRoute(
       path: "${AppRoutes.DETAILS_SCREEN}/:id",
       name: AppRoutes.DETAILS_SCREEN,
-      builder: (context, state) {
-        final int itemId =
-            int.parse(state.pathParameters['id']!); // Get itemId from path
-        return DetailsScreen(itemId: itemId);
+      pageBuilder: (context, state) {
+        final int itemId = int.parse(state.pathParameters['id']!);
+        return customTransition(state: state, child: DetailsScreen(productId: itemId));
       },
     ),
   ],

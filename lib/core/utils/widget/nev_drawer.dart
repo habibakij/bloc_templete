@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_template/core/theme/app_text_styles.dart';
+import 'package:flutter_bloc_template/core/theme/app_style.dart';
+import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 
 class CommonDrawer extends StatelessWidget {
   const CommonDrawer({super.key});
@@ -11,27 +12,13 @@ class CommonDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
+            decoration: BoxDecoration(color: AppColors.primaryColor),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Icon(
-                  Icons.person,
-                  size: 80,
-                ),
-                Text(
-                  "John Doe",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "johndoe@example.com",
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
-                ),
+              children: [
+                Icon(Icons.person, size: 80),
+                Text("John Doe", style: AppTextStyles.regular()),
+                Text("johndoe@example.com", style: AppTextStyles.regular()),
               ],
             ),
           ),
@@ -73,13 +60,10 @@ class CommonDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawerItem(
-      {required IconData icon,
-      required String text,
-      required VoidCallback onTap}) {
+  Widget _buildDrawerItem({required IconData icon, required String text, required VoidCallback onTap}) {
     return ListTile(
       leading: Icon(icon, color: Colors.blue),
-      title: Text(text, style: AppTextStyles.bodyTextStyle()),
+      title: Text(text, style: AppTextStyles.regular()),
       onTap: onTap,
     );
   }

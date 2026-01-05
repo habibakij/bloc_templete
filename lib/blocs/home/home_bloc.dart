@@ -1,26 +1,47 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc_template/data/model/home_screen/item_list_model.dart';
-import 'package:flutter_bloc_template/data/repositories/home_screen_repository.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc_template/data/model/response/product_model.dart';
+import 'package:flutter_bloc_template/data/repositories/product_repository.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc() : super(HomeInitial()) {
-    final HomeScreenRepository repository = HomeScreenRepository();
-    on<HomeEvent>((event, emit) async {
-      if (event is HomeEventInitial) {
-        emit(ItemLoading());
-        try {
-          final items = await repository.fetchItems();
-          log("check_date: ${items.length}");
-          emit(ItemLoaded(listItem: items));
-        } catch (e) {
-          emit(ItemError(e.toString()));
+  final ProductRepository repository;
+  List<ProductModel> productList = [];
+  List<ProductModel> categoryList = [];
+
+  HomeBloc(this.repository) : super(const ProductInitialState()) {
+    on<DataFetchingEvent>(_onFetchProducts);
+    on<FilterEvent>(_onCategoryWiseFiltering);
+    on<FilterRemoveEvent>(_onFilterRemove);
+  }
+
+  Future<void> _onFetchProducts(DataFetchingEvent event, Emitter<HomeState> emit) async {
+    emit(const ProductLoadingState());
+    try {
+      final products = await repository.getProducts() ?? [];
+      final List<ProductModel> categoryList = [];
+      final Set<String> categorySet = {};
+      for (final product in products) {
+        if (product.category != null && categorySet.add(product.category ?? '')) {
+          categoryList.add(product);
         }
       }
-    });
+      emit(ProductLoadedState(products, categoryList));
+    } catch (e) {
+      emit(ProductErrorState(e.toString()));
+    }
+  }
+
+  void _onCategoryWiseFiltering(FilterEvent event, Emitter<HomeState> emit) {
+    List<ProductModel> filteredProductList = [];
+    String category = event.selectedCategory;
+    filteredProductList = productList.where((e) => e.category == category).toList();
+    emit(ProductFilterState(filteredProductList, event.selectedCategory));
+  }
+
+  void _onFilterRemove(FilterRemoveEvent event, Emitter<HomeState> emit) {
+    emit(ProductLoadedState(productList, categoryList));
   }
 }

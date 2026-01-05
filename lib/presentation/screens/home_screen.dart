@@ -1,62 +1,97 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_template/blocs/home/home_bloc.dart';
-import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
-import 'package:flutter_bloc_template/core/theme/app_text_styles.dart';
-import 'package:flutter_bloc_template/core/utils/widget/common_app_bar.dart';
-import 'package:flutter_bloc_template/core/utils/widget/nev_drawer.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc_template/core/theme/app_style.dart';
+import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
+import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
+import 'package:flutter_bloc_template/presentation/widgets/home/category_widget.dart';
+import 'package:flutter_bloc_template/presentation/widgets/home/product_card.dart';
+import 'package:flutter_bloc_template/presentation/widgets/shimmer/home/category_loading.dart';
+import 'package:flutter_bloc_template/presentation/widgets/shimmer/home/products_loading.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: CommonAppBar(title: "Home", scaffoldKey: _scaffoldKey),
-      drawer: const CommonDrawer(),
-      body: BlocProvider(
-        create: (context) {
-          final homeBloc = HomeBloc();
-          homeBloc.add(HomeEventInitial());
-          return homeBloc;
-        },
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text("Flutter BLoC", style: AppTextStyles.title()),
+        centerTitle: true,
+        backgroundColor: AppColors.primaryColor,
+      ),
+      body: SafeArea(
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            if (state is ItemLoading || state is HomeInitial) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is ItemLoaded) {
-              return ListView.separated(
-                itemCount: state.listItem.length,
-                itemBuilder: (context, index) {
-                  final item = state.listItem[index];
-                  return ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text("User ID: ${item.id}",
-                          style: AppTextStyles.titleTextStyle()),
-                    ),
-                    subtitle: Text(item.title ?? "",
-                        style: AppTextStyles.bodyTextStyle()),
-                    onTap: () {
-                      context.pushNamed(AppRoutes.DETAILS_SCREEN,
-                          pathParameters: {'id': item.id.toString()});
-
-                      //context.goNamed(AppRoutes.DETAILS_SCREEN, extra: item.id);
-                    },
-                  );
+            if (state is ProductLoadingState) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<HomeBloc>().add(DataFetchingEvent());
                 },
-                separatorBuilder: (_, index) {
-                  return Divider(height: 2.0);
-                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppWidget.height(12),
+                    CategoryLoading(),
+                    AppWidget.height(12),
+                    Expanded(child: ProductsLoading()),
+                  ],
+                ),
               );
-            } else if (state is ItemError) {
-              return Center(child: Text("Error: ${state.message}"));
+            } else if (state is ProductLoadedState) {
+              context.read<HomeBloc>().productList = state.products;
+              context.read<HomeBloc>().categoryList = state.categoryList;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppWidget.height(12),
+                  CategoryWidget(categoryList: state.categoryList, selectedCategory: ''),
+                  AppWidget.height(12),
+                  Expanded(
+                    child: GridView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: state.products.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 0.85,
+                      ),
+                      itemBuilder: (_, i) => ProductCardWidget(product: state.products[i]),
+                    ),
+                  ),
+                ],
+              );
+            } else if (state is ProductFilterState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppWidget.height(12),
+                  CategoryWidget(categoryList: context.read<HomeBloc>().categoryList, selectedCategory: state.selectedCategory ?? ''),
+                  AppWidget.height(12),
+                  Expanded(
+                    child: GridView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: state.filteringList.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 0.85,
+                      ),
+                      itemBuilder: (_, i) => ProductCardWidget(product: state.filteringList[i]),
+                    ),
+                  ),
+                ],
+              );
+            } else if (state is ProductErrorState) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(child: Text(state.message, textAlign: TextAlign.center)),
+              );
             }
-            return const Center(child: Text("No data available"));
+            return Center(child: Text("Loading..."));
           },
         ),
       ),

@@ -1,17 +1,29 @@
 part of 'details_bloc.dart';
 
-abstract class DetailsState {}
+abstract class DetailsState extends Equatable {
+  const DetailsState();
 
-class DetailsInitial extends DetailsState {}
-
-class ItemLoading extends DetailsState {}
-
-class ItemLoaded extends DetailsState {
-  final ItemDetailsModel itemDetails;
-  ItemLoaded({required this.itemDetails});
+  @override
+  List<Object?> get props => [];
 }
 
-class ItemError extends DetailsState {
+class ProductDetailsInit extends DetailsState {}
+
+class ProductDetailsLoadingState extends DetailsState {
+  const ProductDetailsLoadingState();
+}
+
+class ProductDetailLoadedState extends DetailsState {
+  final ProductDetailsModel product;
+  const ProductDetailLoadedState(this.product);
+
+  @override
+  List<Object?> get props => [product];
+}
+
+class ProductDetailsErrorState extends DetailsState {
   final String message;
-  ItemError(this.message);
+  const ProductDetailsErrorState(this.message);
+  @override
+  List<Object?> get props => [message];
 }
