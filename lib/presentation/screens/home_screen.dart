@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_template/blocs/home/home_bloc.dart';
-import 'package:flutter_bloc_template/core/theme/app_style.dart';
-import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
+import 'package:flutter_bloc_template/core/utils/widget/common_app_bar.dart';
 import 'package:flutter_bloc_template/presentation/widgets/home/category_widget.dart';
 import 'package:flutter_bloc_template/presentation/widgets/home/product_card.dart';
 import 'package:flutter_bloc_template/presentation/widgets/shimmer/home/category_loading.dart';
@@ -16,11 +15,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Flutter BLoC", style: AppTextStyles.title()),
-        centerTitle: true,
-        backgroundColor: AppColors.primaryColor,
-      ),
+      appBar: CommonAppBar(title: "Flutter BloC", visibilityLeading: false),
       body: SafeArea(
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {

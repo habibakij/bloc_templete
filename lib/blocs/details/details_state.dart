@@ -21,6 +21,10 @@ class ProductDetailLoadedState extends DetailsState {
   List<Object?> get props => [product];
 }
 
+class CartCounterState extends DetailsState {
+  const CartCounterState();
+}
+
 class ProductDetailsErrorState extends DetailsState {
   final String message;
   const ProductDetailsErrorState(this.message);

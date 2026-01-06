@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_template/blocs/details/details_bloc.dart';
+import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
 import 'package:flutter_bloc_template/core/theme/app_style.dart';
+import 'package:flutter_bloc_template/core/utils/helper/asset_manager.dart';
 import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
+import 'package:flutter_bloc_template/core/utils/widget/app_button.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
+import 'package:flutter_bloc_template/core/utils/widget/common_app_bar.dart';
+import 'package:flutter_bloc_template/core/utils/widget/snackbar.dart';
 import 'package:flutter_bloc_template/presentation/widgets/shimmer/details/product_details_loading.dart';
+import 'package:go_router/go_router.dart';
 
 class DetailsScreen extends StatefulWidget {
   final int productId;
+
   const DetailsScreen({super.key, required this.productId});
 
   @override
@@ -24,75 +31,113 @@ class _DetailsScreenState extends State<DetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Product Details', style: AppTextStyles.title()),
-        elevation: 0,
-        backgroundColor: AppColors.primaryColor,
-        centerTitle: true,
+      appBar: CommonAppBar(
+        title: "Product Details",
+        actions: [
+          InkWell(
+            borderRadius: BorderRadius.all(Radius.circular(50.0)),
+            focusColor: AppColors.toneColor,
+            onTap: () {
+              context.pushNamed(AppRoutes.CART_SCREEN);
+            },
+            child: Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    size: 28.0,
+                    Icons.shopping_cart,
+                    color: AppColors.black,
+                  ),
+                ),
+                Positioned(
+                  right: 4.0,
+                  top: 0.0,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+                    decoration: BoxDecoration(
+                      color: AppColors.toneColor,
+                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                    ),
+                    child: Text(
+                      "9",
+                      style: AppTextStyles.regular(color: AppColors.red, fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          AppWidget.width(4.0),
+        ],
       ),
       body: SafeArea(
         child: BlocBuilder<DetailsBloc, DetailsState>(
           builder: (context, state) {
             if (state is ProductDetailsLoadingState) {
-              return const Center(child: ProductDetailsLoading());
+              return Center(child: ProductDetailsLoading(
+                onRefresh: () async {
+                  context.read<DetailsBloc>().add(ProductDetailsInitEvent(productID: widget.productId));
+                },
+              ));
             } else if (state is ProductDetailLoadedState) {
               final product = state.product;
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: 300,
-                      child: Image.network(
-                        product.image ?? '',
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
+              return product.image == null || product.image!.isEmpty
+                  ? Center(child: ProductDetailsLoading(
+                      onRefresh: () async {
+                        context.read<DetailsBloc>().add(ProductDetailsInitEvent(productID: widget.productId));
+                      },
+                    ))
+                  : SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(product.title ?? '', style: AppTextStyles.title()),
-                          AppWidget.height(8),
-                          Row(
-                            children: [
-                              Text(
-                                '৳${product.price}',
-                                style: AppTextStyles.regular(fontWeight: FontWeight.w600, color: AppColors.green),
-                              ),
-                              AppWidget.width(4),
-                              Text(
-                                product.price != null ? "৳${(product.price! + 20).toStringAsFixed(2)}" : '',
-                                style: AppTextStyles.discountStrikeStyle(),
-                              ),
-                            ],
-                          ),
-                          AppWidget.height(8),
-                          Text('Description', style: AppTextStyles.title()),
-                          AppWidget.height(8),
-                          Text(product.description ?? '', style: AppTextStyles.regular()),
-                          AppWidget.height(12),
                           SizedBox(
                             width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Added to cart!'), duration: Duration(seconds: 1)),
+                            height: 300,
+                            child: Image.network(
+                              product.image ?? '',
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(image: AssetImage(placeholderImage), fit: BoxFit.fill),
+                                  ),
                                 );
                               },
-                              child: const Text('Add to Cart', style: TextStyle(fontSize: 18)),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(product.title ?? '', style: AppTextStyles.title()),
+                                AppWidget.height(8),
+                                Row(
+                                  children: [
+                                    Text(
+                                      product.price != null ? '৳${product.price}' : '',
+                                      style: AppTextStyles.regular(fontWeight: FontWeight.w600, color: AppColors.green),
+                                    ),
+                                    AppWidget.width(4),
+                                    Text(
+                                      product.price != null ? "৳${(product.price! + 20).toStringAsFixed(2)}" : '',
+                                      style: AppTextStyles.discountStrikeStyle(),
+                                    ),
+                                  ],
+                                ),
+                                AppWidget.height(8),
+                                product.description != null ? Text('Description', style: AppTextStyles.title()) : SizedBox.shrink(),
+                                AppWidget.height(8),
+                                Text(product.description ?? '', style: AppTextStyles.regular()),
+                                AppWidget.height(12),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              );
+                    );
             } else if (state is ProductDetailsErrorState) {
               return Center(
                 child: Padding(
@@ -118,6 +163,46 @@ class _DetailsScreenState extends State<DetailsScreen> {
             return const Center(child: Text('Loading...'));
           },
         ),
+      ),
+      bottomNavigationBar: BlocBuilder<DetailsBloc, DetailsState>(
+        builder: (context, state) {
+          if (state is ProductDetailLoadedState) {
+            return state.product.image != null && state.product.image!.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: AppButton(
+                            title: "Buy now",
+                            isLoading: false,
+                            borderRadius: 20,
+                            backgroundColor: AppColors.toneColor,
+                            onPressed: () {
+                              AppSnackBar.info("Product buying");
+                            },
+                          ),
+                        ),
+                        AppWidget.width(16),
+                        Expanded(
+                          child: AppButton(
+                            title: "Add to cart",
+                            isLoading: false,
+                            borderRadius: 20,
+                            backgroundColor: AppColors.primaryColor,
+                            onPressed: () {
+                              AppSnackBar.info("Adding to cart");
+                              context.read<DetailsBloc>().add(AddToCartEvent());
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : SizedBox.shrink();
+          }
+          return SizedBox.shrink();
+        },
       ),
     );
   }

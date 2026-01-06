@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
+import 'package:flutter_bloc_template/presentation/screens/cart_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/details_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/home_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/splash_screen.dart';
@@ -25,6 +26,11 @@ final GoRouter appRouter = GoRouter(
         final int itemId = int.parse(state.pathParameters['id']!);
         return customTransition(state: state, child: DetailsScreen(productId: itemId));
       },
+    ),
+    GoRoute(
+      path: AppRoutes.CART_SCREEN,
+      name: AppRoutes.CART_SCREEN,
+      pageBuilder: (context, state) => customTransition(state: state, child: CartScreen()),
     ),
   ],
 );

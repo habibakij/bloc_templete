@@ -12,6 +12,7 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
   final ProductRepository repository;
   DetailsBloc(this.repository) : super(ProductDetailsInit()) {
     on<ProductDetailsInitEvent>(onFetchDetailsData);
+    on<AddToCartEvent>(onCartCounter);
   }
 
   FutureOr<void> onFetchDetailsData(ProductDetailsInitEvent event, Emitter<DetailsState> emit) async {
@@ -22,5 +23,11 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
     } catch (e) {
       emit(ProductDetailsErrorState(e.toString()));
     }
+  }
+
+  int cartCounter = 0;
+  FutureOr<void> onCartCounter(AddToCartEvent event, Emitter<DetailsState> emit) {
+    cartCounter++;
+    emit(CartCounterState());
   }
 }
