@@ -8,7 +8,6 @@ import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_button.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
 import 'package:flutter_bloc_template/core/utils/widget/common_app_bar.dart';
-import 'package:flutter_bloc_template/core/utils/widget/snackbar.dart';
 import 'package:flutter_bloc_template/presentation/widgets/shimmer/details/product_details_loading.dart';
 import 'package:go_router/go_router.dart';
 
@@ -34,39 +33,42 @@ class _DetailsScreenState extends State<DetailsScreen> {
       appBar: CommonAppBar(
         title: "Product Details",
         actions: [
-          InkWell(
-            borderRadius: BorderRadius.all(Radius.circular(50.0)),
-            focusColor: AppColors.toneColor,
-            onTap: () {
-              context.pushNamed(AppRoutes.CART_SCREEN);
+          BlocBuilder<DetailsBloc, DetailsState>(
+            builder: (context, state) {
+              if (state is ProductDetailLoadedState) {
+                return InkWell(
+                  borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                  focusColor: AppColors.toneColor,
+                  onTap: () {
+                    context.pushNamed(AppRoutes.CART_SCREEN);
+                  },
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        right: 4.0,
+                        top: 0.0,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+                          decoration: BoxDecoration(
+                            color: AppColors.toneColor,
+                            borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                          ),
+                          child: Text(
+                            "${state.cartCounter}",
+                            style: AppTextStyles.regular(color: AppColors.red, fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(size: 28.0, Icons.shopping_cart, color: AppColors.black),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return SizedBox.shrink();
             },
-            child: Stack(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    size: 28.0,
-                    Icons.shopping_cart,
-                    color: AppColors.black,
-                  ),
-                ),
-                Positioned(
-                  right: 4.0,
-                  top: 0.0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-                    decoration: BoxDecoration(
-                      color: AppColors.toneColor,
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    ),
-                    child: Text(
-                      "9",
-                      style: AppTextStyles.regular(color: AppColors.red, fontSize: 12, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ),
           AppWidget.width(4.0),
         ],
@@ -97,7 +99,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             height: 300,
                             child: Image.network(
                               product.image ?? '',
-                              fit: BoxFit.contain,
+                              fit: BoxFit.fill,
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
                                   decoration: BoxDecoration(
@@ -160,7 +162,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 ),
               );
             }
-            return const Center(child: Text('Loading...'));
+            return SizedBox.shrink();
           },
         ),
       ),
@@ -174,25 +176,24 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       children: [
                         Expanded(
                           child: AppButton(
+                            height: 40,
                             title: "Buy now",
                             isLoading: false,
                             borderRadius: 20,
                             backgroundColor: AppColors.toneColor,
-                            onPressed: () {
-                              AppSnackBar.info("Product buying");
-                            },
+                            onPressed: () {},
                           ),
                         ),
                         AppWidget.width(16),
                         Expanded(
                           child: AppButton(
+                            height: 40,
                             title: "Add to cart",
                             isLoading: false,
                             borderRadius: 20,
                             backgroundColor: AppColors.primaryColor,
                             onPressed: () {
-                              AppSnackBar.info("Adding to cart");
-                              context.read<DetailsBloc>().add(AddToCartEvent());
+                              context.read<DetailsBloc>().add(AddToCartEvent(product: state.product));
                             },
                           ),
                         ),

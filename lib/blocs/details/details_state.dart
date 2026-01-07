@@ -15,14 +15,17 @@ class ProductDetailsLoadingState extends DetailsState {
 
 class ProductDetailLoadedState extends DetailsState {
   final ProductDetailsModel product;
-  const ProductDetailLoadedState(this.product);
+  final int cartCounter;
+  const ProductDetailLoadedState(this.product, this.cartCounter);
 
   @override
   List<Object?> get props => [product];
 }
 
-class CartCounterState extends DetailsState {
-  const CartCounterState();
+class AddedToCartState1 extends DetailsState {
+  final ProductDetailsModel product;
+  final int cartCounter;
+  const AddedToCartState1(this.product, this.cartCounter);
 }
 
 class ProductDetailsErrorState extends DetailsState {

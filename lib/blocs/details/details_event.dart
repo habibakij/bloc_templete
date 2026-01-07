@@ -4,9 +4,11 @@ abstract class DetailsEvent {}
 
 class ProductDetailsInitEvent extends DetailsEvent {
   final int? productID;
-  ProductDetailsInitEvent({this.productID});
+  final bool isAddToCart;
+  ProductDetailsInitEvent({this.productID, this.isAddToCart = false});
 }
 
 class AddToCartEvent extends DetailsEvent {
-  AddToCartEvent();
+  final ProductDetailsModel product;
+  AddToCartEvent({required this.product});
 }
