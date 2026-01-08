@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_template/blocs/cart/cart_bloc.dart';
 import 'package:flutter_bloc_template/blocs/details/details_bloc.dart';
 import 'package:flutter_bloc_template/blocs/home/home_bloc.dart';
 import 'package:flutter_bloc_template/blocs/splash/splash_cubit.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => SplashCubit()..startSplash()),
           BlocProvider(create: (context) => HomeBloc(context.read<ProductRepository>())..add(DataFetchingEvent())),
           BlocProvider(create: (context) => DetailsBloc(context.read<ProductRepository>())..add(ProductDetailsInitEvent())),
+          BlocProvider(create: (context) => CartBloc(context.read<ProductRepository>())..add(CartLoadingEvent())),
         ],
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,

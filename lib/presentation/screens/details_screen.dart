@@ -13,7 +13,6 @@ import 'package:go_router/go_router.dart';
 
 class DetailsScreen extends StatefulWidget {
   final int productId;
-
   const DetailsScreen({super.key, required this.productId});
 
   @override
@@ -54,7 +53,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             borderRadius: BorderRadius.all(Radius.circular(30.0)),
                           ),
                           child: Text(
-                            "${state.cartCounter}",
+                            "${state.cartProductsList.length}",
                             style: AppTextStyles.regular(color: AppColors.red, fontSize: 12, fontWeight: FontWeight.w600),
                           ),
                         ),

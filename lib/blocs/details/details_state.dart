@@ -15,8 +15,8 @@ class ProductDetailsLoadingState extends DetailsState {
 
 class ProductDetailLoadedState extends DetailsState {
   final ProductDetailsModel product;
-  final int cartCounter;
-  const ProductDetailLoadedState(this.product, this.cartCounter);
+  final List<ProductDetailsModel> cartProductsList;
+  const ProductDetailLoadedState(this.product, this.cartProductsList);
 
   @override
   List<Object?> get props => [product];

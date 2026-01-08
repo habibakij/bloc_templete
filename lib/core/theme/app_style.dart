@@ -35,7 +35,7 @@ class AppTextStyles {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      color: color ?? AppColors.grey,
+      color: color ?? AppColors.greyLite,
       letterSpacing: letterSpacing,
       height: height,
       decoration: decoration ?? TextDecoration.none,
@@ -48,7 +48,7 @@ class AppTextStyles {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      color: color ?? AppColors.grey,
+      color: color ?? AppColors.greyLite,
       letterSpacing: letterSpacing,
       height: height,
       decoration: decoration,

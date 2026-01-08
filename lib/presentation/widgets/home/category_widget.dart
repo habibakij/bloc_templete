@@ -37,7 +37,7 @@ class CategoryWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isSelected ? AppColors.primaryColor : AppColors.white,
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: AppColors.greyLite),
+                border: Border.all(color: AppColors.greyLiteBorder),
               ),
               alignment: Alignment.center,
               child: Text(
