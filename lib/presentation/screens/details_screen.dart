@@ -126,6 +126,25 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                       product.price != null ? "৳${(product.price! + 20).toStringAsFixed(2)}" : '',
                                       style: AppTextStyles.discountStrikeStyle(),
                                     ),
+                                    AppWidget.width(30),
+                                    IconButton(
+                                      icon: const Icon(Icons.remove, size: 18),
+                                      onPressed: () {
+                                        context.read<DetailsBloc>().add(RemoveProductQuantityEvent(product: product, cartProductsList: state.cartProductsList));
+                                      },
+                                    ),
+                                    AppWidget.width(8),
+                                    Text(
+                                      state.quantity.toString(),
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    AppWidget.width(8),
+                                    IconButton(
+                                      icon: const Icon(Icons.add, size: 18),
+                                      onPressed: () {
+                                        context.read<DetailsBloc>().add(AddProductQuantityEvent(product: product, cartProductsList: state.cartProductsList));
+                                      },
+                                    ),
                                   ],
                                 ),
                                 AppWidget.height(8),

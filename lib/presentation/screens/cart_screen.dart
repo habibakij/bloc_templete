@@ -54,7 +54,7 @@ class _CartScreenState extends State<CartScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Image.network(
-                            item.image ?? "",
+                            item.productDetailsModel?.image ?? "",
                             width: 80,
                             height: 80,
                             fit: BoxFit.cover,
@@ -73,14 +73,14 @@ class _CartScreenState extends State<CartScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                item.title ?? "",
+                                item.productDetailsModel?.title ?? "",
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: AppTextStyles.regular(fontSize: 14, fontWeight: FontWeight.w500),
                               ),
                               AppWidget.height(2),
                               Text(
-                                item.category ?? "",
+                                "${item.productDetailsModel?.category} ${state.totalPrice}" ?? "",
                                 style: AppTextStyles.hintStyle(),
                               ),
                               Row(
@@ -91,10 +91,14 @@ class _CartScreenState extends State<CartScreen> {
                                     style: AppTextStyles.hintStyle(color: AppColors.green),
                                   ),
                                   Text(
-                                    "৳${item.price?.toStringAsFixed(2)}",
+                                    "৳${item.productDetailsModel?.price?.toStringAsFixed(2)}",
                                     style: AppTextStyles.title(fontSize: 14),
                                   ),
-                                  _QuantitySelector(quantity: 8, onAdd: () {}, onRemove: () {}),
+                                  _QuantitySelector(
+                                    quantity: item.quantity ?? 1,
+                                    onAdd: () {},
+                                    onRemove: () {},
+                                  ),
                                 ],
                               ),
                             ],
