@@ -93,16 +93,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
+                          Container(
                             width: double.infinity,
-                            height: 300,
+                            constraints: const BoxConstraints(maxHeight: 500),
                             child: Image.network(
                               product.image ?? '',
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
                                   decoration: BoxDecoration(
-                                    image: DecorationImage(image: AssetImage(placeholderImage), fit: BoxFit.fill),
+                                    image: DecorationImage(image: AssetImage(placeholderImage), fit: BoxFit.cover),
                                   ),
                                 );
                               },
@@ -116,15 +116,24 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 Text(product.title ?? '', style: AppTextStyles.title()),
                                 AppWidget.height(8),
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      product.price != null ? '৳${product.price}' : '',
-                                      style: AppTextStyles.regular(fontWeight: FontWeight.w600, color: AppColors.green),
-                                    ),
-                                    AppWidget.width(4),
-                                    Text(
-                                      product.price != null ? "৳${(product.price! + 20).toStringAsFixed(2)}" : '',
-                                      style: AppTextStyles.discountStrikeStyle(),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          product.price != null ? '৳${product.price}' : '',
+                                          style: AppTextStyles.title(fontWeight: FontWeight.w600, color: AppColors.green),
+                                        ),
+                                        AppWidget.width(4),
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 2.0),
+                                          child: Text(
+                                            product.price != null ? "৳${(product.price! + 20).toStringAsFixed(2)}" : '',
+                                            style: AppTextStyles.discountStrikeStyle(),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     AppWidget.width(30),
                                     IconButton(

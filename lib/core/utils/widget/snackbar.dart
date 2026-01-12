@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_template/core/theme/app_style.dart';
 import 'package:flutter_bloc_template/core/utils/helper/app_constants.dart';
+import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 
 class AppSnackBar {
   static void show({
@@ -12,18 +14,13 @@ class AppSnackBar {
     final snackBar = SnackBar(
       content: Text(
         message,
-        style: const TextStyle(color: Colors.white),
+        textAlign: TextAlign.center,
+        style: AppTextStyles.regular(color: AppColors.white, fontWeight: FontWeight.w600),
       ),
       backgroundColor: backgroundColor,
       duration: duration,
       behavior: SnackBarBehavior.floating,
-      action: actionLabel != null
-          ? SnackBarAction(
-              label: actionLabel,
-              onPressed: onAction ?? () {},
-              textColor: Colors.white,
-            )
-          : null,
+      action: actionLabel != null ? SnackBarAction(label: actionLabel, onPressed: onAction ?? () {}, textColor: AppColors.white) : null,
     );
     scaffoldMessengerKey.currentState
       ?..hideCurrentSnackBar()
@@ -31,14 +28,18 @@ class AppSnackBar {
   }
 
   static void success(String message) {
-    show(message: message, backgroundColor: Colors.green);
+    show(message: message, backgroundColor: AppColors.green);
   }
 
   static void error(String message) {
-    show(message: message, backgroundColor: Colors.red);
+    show(message: message, backgroundColor: AppColors.red);
   }
 
   static void info(String message) {
-    show(message: message, backgroundColor: Colors.blue);
+    show(message: message, backgroundColor: AppColors.primaryColor);
+  }
+
+  static void warning(String message) {
+    show(message: message, backgroundColor: AppColors.warning);
   }
 }

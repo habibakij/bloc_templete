@@ -119,23 +119,58 @@ class _CartScreenState extends State<CartScreen> {
           },
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0).copyWith(bottom: 16.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: AppButton(
-                title: "Buy now",
-                isLoading: false,
-                borderRadius: 20,
-                backgroundColor: AppColors.toneColor,
-                onPressed: () {
-                  AppSnackBar.info("Product buying");
-                },
+      bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartLoadedState) {
+            return SizedBox(
+              height: 70,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("Sub total: ", style: AppTextStyles.regular()),
+                            AppWidget.width(8),
+                            Text("৳${state.totalPrice}", style: AppTextStyles.regular(fontWeight: FontWeight.w500)),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("You save: ", style: AppTextStyles.regular()),
+                            AppWidget.width(8),
+                            Text("৳${(state.cartProductList.length * 20).toDouble()}", style: AppTextStyles.regular(fontWeight: FontWeight.w500)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 40,
+                      width: 120,
+                      child: AppButton(
+                        title: "Order Place",
+                        isLoading: false,
+                        borderRadius: 16,
+                        backgroundColor: AppColors.toneColor,
+                        onPressed: () {
+                          AppSnackBar.info("Product buying");
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+            );
+          }
+          return SizedBox.shrink();
+        },
       ),
     );
   }
@@ -165,7 +200,7 @@ class _QuantitySelector extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6),
-                child: quantity < 2 ? Icon(Icons.remove, size: 12) : Icon(Icons.delete, size: 12, color: AppColors.dartRed),
+                child: quantity < 2 ? Icon(Icons.delete, size: 12) : Icon(Icons.remove, size: 12, color: AppColors.dartRed),
               ),
             ),
           ),

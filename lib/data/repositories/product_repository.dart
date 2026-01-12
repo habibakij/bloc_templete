@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_template/core/network/api_service.dart';
+import 'package:flutter_bloc_template/core/utils/widget/snackbar.dart';
 import 'package:flutter_bloc_template/data/model/custom/add_to_cart_model.dart';
 import 'package:flutter_bloc_template/data/model/response/product_details_model.dart';
 import 'package:flutter_bloc_template/data/model/response/product_model.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_bloc_template/data/model/response/product_model.dart';
 class ProductRepository {
   final _apiService = ApiService();
   final List<AddToCartModel> _cartProducts = [];
-  int quantity = 0;
+  int quantity = 1;
 
   Future<List<ProductModel>?> getProducts() async {
     return await _apiService.getProducts();
@@ -21,7 +22,12 @@ class ProductRepository {
   }
 
   void addToCart(AddToCartModel product) {
-    if (!_cartProducts.any((p) => p.uID == product.uID)) {
+    final exists = _cartProducts.any(
+      (p) => p.productDetailsModel?.id == product.productDetailsModel?.id,
+    );
+    if (exists) {
+      AppSnackBar.warning("Added !");
+    } else {
       _cartProducts.add(product);
     }
   }
@@ -42,6 +48,10 @@ class ProductRepository {
     if (quantity > 1) {
       quantity--;
     }
+  }
+
+  void resetProductQuantity() {
+    quantity = 1;
   }
 
   int get getQuantity => quantity;

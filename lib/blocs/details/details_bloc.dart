@@ -21,10 +21,12 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
   /// get product details
   FutureOr<void> onFetchDetailsData(ProductDetailsInitEvent event, Emitter<DetailsState> emit) async {
     emit(const ProductDetailsLoadingState());
+    repository.resetProductQuantity();
     try {
       final product = await repository.getProductById(event.productID ?? 0);
       final cartProducts = repository.getCartProducts();
-      emit(ProductDetailLoadedState(product ?? ProductDetailsModel(), cartProducts, 0));
+      final quantity = repository.getQuantity;
+      emit(ProductDetailLoadedState(product ?? ProductDetailsModel(), cartProducts, quantity));
     } catch (e) {
       emit(ProductDetailsErrorState(e.toString()));
     }

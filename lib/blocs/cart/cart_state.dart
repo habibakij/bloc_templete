@@ -18,7 +18,7 @@ class CartLoadingState extends CartState {
 
 class CartLoadedState extends CartState {
   final List<AddToCartModel> cartProductList;
-  final int totalPrice;
+  final double totalPrice;
   const CartLoadedState(this.cartProductList, {this.totalPrice = 0});
 
   @override

@@ -11,9 +11,10 @@ class AppColors {
   static const red = Color(0XFFff1100);
   static const dartRed = Color(0XFFb32400);
   static const grey = Color(0XFFaaaaaa);
-  static const greyLite = Color(0XFF757575);
+  static const greyLite = Color(0XFF999999);
   static const greyLiteBorder = Color(0XFFd9d9d9);
   static const textColor = Color(0XDD000000);
   static const orangeColor = Color(0XFFff9900);
   static const green = Color(0XFF009933);
+  static const warning = Color(0XFFffc34d);
 }
