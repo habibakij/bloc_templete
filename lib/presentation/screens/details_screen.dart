@@ -35,34 +35,40 @@ class _DetailsScreenState extends State<DetailsScreen> {
           BlocBuilder<DetailsBloc, DetailsState>(
             builder: (context, state) {
               if (state is ProductDetailLoadedState) {
-                return InkWell(
-                  borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                  focusColor: AppColors.toneColor,
-                  onTap: () {
-                    context.pushNamed(AppRoutes.CART_SCREEN);
-                  },
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        right: 4.0,
-                        top: 0.0,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-                          decoration: BoxDecoration(
-                            color: AppColors.toneColor,
-                            borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                          ),
-                          child: Text(
-                            "${state.cartProductsList.length}",
-                            style: AppTextStyles.regular(color: AppColors.red, fontSize: 12, fontWeight: FontWeight.w600),
+                return DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: AppColors.greyLiteBorder.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                    focusColor: AppColors.toneColor,
+                    onTap: () {
+                      context.pushNamed(AppRoutes.CART_SCREEN);
+                    },
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(6.0),
+                          child: Icon(size: 20.0, Icons.shopping_cart, color: AppColors.black),
+                        ),
+                        Positioned(
+                          right: 0.0,
+                          top: 0.0,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryColor,
+                              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                            ),
+                            child: Text(
+                              "${state.cartProductsList.length}",
+                              style: AppTextStyles.regular(color: AppColors.red, fontSize: 12, fontWeight: FontWeight.w600),
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(size: 28.0, Icons.shopping_cart, color: AppColors.black),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               }

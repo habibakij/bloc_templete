@@ -6,7 +6,7 @@ import 'package:flutter_bloc_template/data/model/response/product_details_model.
 
 class AddToCartModel {
   final int? uID;
-  final int? quantity;
+  int? quantity;
   final ProductDetailsModel? productDetailsModel;
   AddToCartModel({this.uID, this.quantity, this.productDetailsModel});
 }

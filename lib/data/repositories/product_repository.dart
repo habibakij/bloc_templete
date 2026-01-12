@@ -22,9 +22,7 @@ class ProductRepository {
   }
 
   void addToCart(AddToCartModel product) {
-    final exists = _cartProducts.any(
-      (p) => p.productDetailsModel?.id == product.productDetailsModel?.id,
-    );
+    final exists = _cartProducts.any((p) => p.productDetailsModel?.id == product.productDetailsModel?.id);
     if (exists) {
       AppSnackBar.warning("Added !");
     } else {

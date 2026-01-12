@@ -18,8 +18,7 @@ class CartLoadingState extends CartState {
 
 class CartLoadedState extends CartState {
   final List<AddToCartModel> cartProductList;
-  final double totalPrice;
-  const CartLoadedState(this.cartProductList, {this.totalPrice = 0});
+  const CartLoadedState(this.cartProductList);
 
   @override
   List<Object?> get props => [cartProductList];

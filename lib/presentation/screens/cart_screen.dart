@@ -80,7 +80,7 @@ class _CartScreenState extends State<CartScreen> {
                               ),
                               AppWidget.height(2),
                               Text(
-                                "${item.productDetailsModel?.category} ${state.totalPrice}" ?? "",
+                                "${item.productDetailsModel?.category}",
                                 style: AppTextStyles.hintStyle(),
                               ),
                               Row(
@@ -91,13 +91,17 @@ class _CartScreenState extends State<CartScreen> {
                                     style: AppTextStyles.hintStyle(color: AppColors.green),
                                   ),
                                   Text(
-                                    "৳${item.productDetailsModel?.price?.toStringAsFixed(2)}",
+                                    "৳${context.read<CartBloc>().cartItemPriceCalculation(item.productDetailsModel?.price ?? 0, item.quantity ?? 1).toStringAsFixed(2)}",
                                     style: AppTextStyles.title(fontSize: 14),
                                   ),
                                   _QuantitySelector(
                                     quantity: item.quantity ?? 1,
-                                    onAdd: () {},
-                                    onRemove: () {},
+                                    onAdd: () {
+                                      context.read<CartBloc>().add(CartProductIncrement(cartProductList: state.cartProductList, cartProductIndex: state.cartProductList.indexOf(item)));
+                                    },
+                                    onRemove: () {
+                                      context.read<CartBloc>().add(CartProductDecrement(cartProductList: state.cartProductList, cartProductIndex: state.cartProductList.indexOf(item)));
+                                    },
                                   ),
                                 ],
                               ),
@@ -122,49 +126,53 @@ class _CartScreenState extends State<CartScreen> {
       bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
           if (state is CartLoadedState) {
-            return SizedBox(
-              height: 70,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Sub total: ", style: AppTextStyles.regular()),
-                            AppWidget.width(8),
-                            Text("৳${state.totalPrice}", style: AppTextStyles.regular(fontWeight: FontWeight.w500)),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("You save: ", style: AppTextStyles.regular()),
-                            AppWidget.width(8),
-                            Text("৳${(state.cartProductList.length * 20).toDouble()}", style: AppTextStyles.regular(fontWeight: FontWeight.w500)),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 40,
-                      width: 120,
-                      child: AppButton(
-                        title: "Order Place",
-                        isLoading: false,
-                        borderRadius: 16,
-                        backgroundColor: AppColors.toneColor,
-                        onPressed: () {
-                          AppSnackBar.info("Product buying");
-                        },
+            return SafeArea(
+              child: Container(
+                height: 70,
+                color: AppColors.greyLiteBorder,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text("Sub total: ", style: AppTextStyles.regular()),
+                              AppWidget.width(8),
+                              Text("৳${context.read<CartBloc>().calculationSubTotal(state.cartProductList).toStringAsFixed(2)}", style: AppTextStyles.regular(fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                          AppWidget.height(4),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text("You save: ", style: AppTextStyles.regular()),
+                              AppWidget.width(8),
+                              Text("৳${(state.cartProductList.length * 20).toDouble()}", style: AppTextStyles.regular(fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: 44,
+                        width: 130,
+                        child: AppButton(
+                          title: "Order Place",
+                          isLoading: false,
+                          borderRadius: 12,
+                          backgroundColor: AppColors.toneColor,
+                          onPressed: () {
+                            AppSnackBar.info("Product buying");
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -192,7 +200,7 @@ class _QuantitySelector extends StatelessWidget {
           InkWell(
             radius: 4,
             focusColor: AppColors.grey,
-            onTap: () {},
+            onTap: onRemove,
             child: DecoratedBox(
               decoration: BoxDecoration(
                 border: Border.all(color: AppColors.greyLiteBorder),
@@ -200,7 +208,7 @@ class _QuantitySelector extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6),
-                child: quantity < 2 ? Icon(Icons.delete, size: 12) : Icon(Icons.remove, size: 12, color: AppColors.dartRed),
+                child: quantity < 2 ? Icon(Icons.delete, size: 12, color: AppColors.dartRed) : Icon(Icons.remove, size: 12, color: AppColors.dartRed),
               ),
             ),
           ),
@@ -211,14 +219,19 @@ class _QuantitySelector extends StatelessWidget {
               style: AppTextStyles.title(fontSize: 16),
             ),
           ),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6),
-              child: Icon(Icons.add, size: 12),
+          InkWell(
+            radius: 4,
+            focusColor: AppColors.grey,
+            onTap: onAdd,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6),
+                child: Icon(Icons.add, size: 12),
+              ),
             ),
           ),
         ],
