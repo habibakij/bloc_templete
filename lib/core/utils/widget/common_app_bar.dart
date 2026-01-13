@@ -42,11 +42,17 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: leadingVisibility
           ? leadingWidget ??
               IconButton(
-                icon: Icon(
-                  hasDrawer ? Icons.menu : Icons.arrow_back_ios_new,
-                  color: AppColors.black,
-                  size: 20,
-                ),
+                icon: hasDrawer
+                    ? Icon(
+                        Icons.menu,
+                        color: AppColors.black,
+                        size: 28,
+                      )
+                    : Icon(
+                        Icons.arrow_back_ios_new,
+                        color: AppColors.black,
+                        size: 20,
+                      ),
                 onPressed: hasDrawer ? () => scaffoldKey!.currentState?.openDrawer() : (onLeadingTab ?? () => Navigator.maybePop(context)),
               )
           : SizedBox.shrink(),

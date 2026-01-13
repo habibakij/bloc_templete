@@ -16,5 +16,6 @@ class AppColors {
   static const textColor = Color(0XDD000000);
   static const orangeColor = Color(0XFFff9900);
   static const green = Color(0XFF009933);
+  static const greenLite = Color(0XFF99ffbb);
   static const warning = Color(0XFFffc34d);
 }
