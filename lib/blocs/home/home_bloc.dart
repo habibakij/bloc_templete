@@ -17,6 +17,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<FilterRemoveEvent>(_onFilterRemove);
   }
 
+  /// get remote product list
   Future<void> _onFetchProducts(DataFetchingEvent event, Emitter<HomeState> emit) async {
     emit(const ProductLoadingState());
     try {
@@ -34,6 +35,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
+  /// category wise filtering
   void _onCategoryWiseFiltering(FilterEvent event, Emitter<HomeState> emit) {
     List<ProductModel> filteredProductList = [];
     String category = event.selectedCategory;
@@ -41,6 +43,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(ProductFilterState(filteredProductList, event.selectedCategory));
   }
 
+  /// remove filtering
   void _onFilterRemove(FilterRemoveEvent event, Emitter<HomeState> emit) {
     emit(ProductLoadedState(productList, categoryList));
   }

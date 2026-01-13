@@ -6,7 +6,7 @@ import 'package:flutter_bloc_template/data/model/response/product_model.dart';
 
 class ProductRepository {
   final _apiService = ApiService();
-  final List<AddToCartModel> _cartProducts = [];
+  List<AddToCartModel> _cartProducts = [];
   int quantity = 1;
 
   Future<List<ProductModel>?> getProducts() async {
@@ -24,7 +24,7 @@ class ProductRepository {
   void addToCart(AddToCartModel product) {
     final exists = _cartProducts.any((p) => p.productDetailsModel?.id == product.productDetailsModel?.id);
     if (exists) {
-      AppSnackBar.warning("Added !");
+      AppSnackBar.warning("Already added !");
     } else {
       _cartProducts.add(product);
     }
@@ -32,10 +32,6 @@ class ProductRepository {
 
   List<AddToCartModel> getCartProducts() {
     return List.from(_cartProducts); // Return copy to prevent external modification
-  }
-
-  void removeFromCart(int productId) {
-    _cartProducts.removeWhere((p) => p.uID == productId);
   }
 
   void addProductQuantity() {

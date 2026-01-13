@@ -13,8 +13,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   CartBloc(this.repository) : super(CartInitialState()) {
     on<CartLoadingEvent>(onCartProductLoading);
-    on<CartProductIncrement>(onIncrementProductQuantity);
-    on<CartProductDecrement>(onDecrementProductQuantity);
+    on<CartProductIncrementEvent>(onIncrementProductQuantity);
+    on<CartProductDecrementEvent>(onDecrementProductQuantity);
+    on<CartItemRemoveEvent>(onRemoveCartItem);
   }
 
   /// loading product cart list
@@ -29,7 +30,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   /// product quantity increment
-  FutureOr<void> onIncrementProductQuantity(CartProductIncrement event, Emitter<CartState> emit) {
+  FutureOr<void> onIncrementProductQuantity(CartProductIncrementEvent event, Emitter<CartState> emit) {
     emit(CartLoadingState());
     final productIndex = event.cartProductIndex;
     final List<AddToCartModel> cartProducts = event.cartProductList;
@@ -44,7 +45,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   /// product quantity increment
-  FutureOr<void> onDecrementProductQuantity(CartProductDecrement event, Emitter<CartState> emit) {
+  FutureOr<void> onDecrementProductQuantity(CartProductDecrementEvent event, Emitter<CartState> emit) {
     emit(CartLoadingState());
     final productIndex = event.cartProductIndex;
     final List<AddToCartModel> cartProducts = event.cartProductList;
@@ -58,10 +59,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(CartLoadedState(cartProducts));
   }
 
+  /// cart single item price calculation
   double cartItemPriceCalculation(double price, int quantity) {
     return price * quantity;
   }
 
+  /// calculation sub total price
   double calculationSubTotal(List<AddToCartModel> cartProductList) {
     double subTotal = 0;
     for (var e in cartProductList) {
@@ -70,5 +73,24 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       subTotal = subTotal + (price * quantity);
     }
     return subTotal;
+  }
+
+  /// discount calculation
+  double discountCalculation(List<AddToCartModel> cartProductList) {
+    int totalQuantity = 0;
+    for (var e in cartProductList) {
+      int quantity = e.quantity ?? 1;
+      totalQuantity = totalQuantity + quantity;
+    }
+    return (totalQuantity * 20);
+  }
+
+  /// cart item delete from list
+  FutureOr<void> onRemoveCartItem(CartItemRemoveEvent event, Emitter<CartState> emit) {
+    emit(CartLoadingState());
+    final productIndex = event.cartProductIndex;
+    final List<AddToCartModel> cartProducts = event.cartProductList;
+    cartProducts.removeWhere((p) => p.productDetailsModel?.id == cartProducts[productIndex].productDetailsModel?.id);
+    emit(CartLoadedState(cartProducts));
   }
 }

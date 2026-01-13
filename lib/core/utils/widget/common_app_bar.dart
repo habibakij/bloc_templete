@@ -3,32 +3,30 @@ import 'package:flutter_bloc_template/core/theme/app_style.dart';
 import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final Color backgroundColor;
   final String title;
   final TextStyle? titleStyle;
   final bool centerTitle;
+  final bool leadingVisibility;
+  final Widget? leadingWidget;
+  final VoidCallback? onLeadingTab;
   final List<Widget>? actions;
-  final Widget? leading;
-  final bool visibilityLeading;
-  final VoidCallback? onLeadingPressed;
-  final Color titleTextColor;
-  final Color backgroundColor;
   final GlobalKey<ScaffoldState>? scaffoldKey;
-  final PreferredSizeWidget? bottom;
+  final PreferredSizeWidget? bottomWidget;
   final double elevation;
 
   const CommonAppBar({
     super.key,
+    this.backgroundColor = AppColors.primaryColor,
     required this.title,
     this.titleStyle,
     this.centerTitle = true,
+    this.leadingVisibility = true,
+    this.leadingWidget,
+    this.onLeadingTab,
     this.actions,
-    this.leading,
-    this.visibilityLeading = true,
-    this.onLeadingPressed,
-    this.titleTextColor = AppColors.textColor,
-    this.backgroundColor = AppColors.primaryColor,
     this.scaffoldKey,
-    this.bottom,
+    this.bottomWidget,
     this.elevation = 0,
   });
 
@@ -41,23 +39,23 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: centerTitle,
       title: Text(title, style: titleStyle ?? AppTextStyles.title()),
       actions: actions,
-      leading: visibilityLeading
-          ? leading ??
+      leading: leadingVisibility
+          ? leadingWidget ??
               IconButton(
                 icon: Icon(
                   hasDrawer ? Icons.menu : Icons.arrow_back_ios_new,
-                  color: titleTextColor,
+                  color: AppColors.black,
                   size: 20,
                 ),
-                onPressed: hasDrawer ? () => scaffoldKey!.currentState?.openDrawer() : (onLeadingPressed ?? () => Navigator.maybePop(context)),
+                onPressed: hasDrawer ? () => scaffoldKey!.currentState?.openDrawer() : (onLeadingTab ?? () => Navigator.maybePop(context)),
               )
           : SizedBox.shrink(),
-      bottom: bottom,
+      bottom: bottomWidget,
     );
   }
 
   @override
   Size get preferredSize => Size.fromHeight(
-        bottom == null ? kToolbarHeight : kToolbarHeight + bottom!.preferredSize.height,
+        bottomWidget == null ? kToolbarHeight : kToolbarHeight + bottomWidget!.preferredSize.height,
       );
 }

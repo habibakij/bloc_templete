@@ -1,0 +1,59 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc_template/core/theme/app_style.dart';
+import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
+
+class CartQuantityAction extends StatelessWidget {
+  final int quantity;
+  final VoidCallback onAdd;
+  final VoidCallback onRemove;
+
+  const CartQuantityAction({super.key, required this.quantity, required this.onAdd, required this.onRemove});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 34,
+      child: Row(
+        children: [
+          InkWell(
+            radius: 4,
+            focusColor: AppColors.grey,
+            onTap: onRemove,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.greyLiteBorder),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6),
+                child: quantity < 2 ? Icon(Icons.delete, size: 12, color: AppColors.dartRed) : Icon(Icons.remove, size: 12, color: AppColors.dartRed),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Text(
+              quantity.toString(),
+              style: AppTextStyles.title(fontSize: 16),
+            ),
+          ),
+          InkWell(
+            radius: 4,
+            focusColor: AppColors.grey,
+            onTap: onAdd,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6),
+                child: Icon(Icons.add, size: 12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

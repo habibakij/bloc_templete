@@ -3,19 +3,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_template/blocs/home/home_bloc.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
 import 'package:flutter_bloc_template/core/utils/widget/common_app_bar.dart';
+import 'package:flutter_bloc_template/core/utils/widget/nev_drawer.dart';
 import 'package:flutter_bloc_template/presentation/widgets/home/category_widget.dart';
 import 'package:flutter_bloc_template/presentation/widgets/home/product_card.dart';
 import 'package:flutter_bloc_template/presentation/widgets/shimmer/home/category_loading.dart';
 import 'package:flutter_bloc_template/presentation/widgets/shimmer/home/products_loading.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CommonAppBar(title: "Flutter BloC", visibilityLeading: false),
+      key: scaffoldKey,
+      drawer: DrawerWidget(),
+      appBar: CommonAppBar(
+        title: "Flutter BloC",
+        leadingVisibility: true,
+        scaffoldKey: scaffoldKey,
+      ),
       body: SafeArea(
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {

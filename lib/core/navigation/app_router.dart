@@ -2,6 +2,8 @@ import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
 import 'package:flutter_bloc_template/presentation/screens/cart_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/details_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/home_screen.dart';
+import 'package:flutter_bloc_template/presentation/screens/my_order.dart';
+import 'package:flutter_bloc_template/presentation/screens/order_confirmation_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,6 +33,16 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.CART_SCREEN,
       name: AppRoutes.CART_SCREEN,
       pageBuilder: (context, state) => customTransition(state: state, child: CartScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.ORDER_CONFIRMATION,
+      name: AppRoutes.ORDER_CONFIRMATION,
+      pageBuilder: (context, state) => customTransition(state: state, child: OrderConfirmationScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.MY_ORDER,
+      name: AppRoutes.MY_ORDER,
+      pageBuilder: (context, state) => customTransition(state: state, child: MyOrder()),
     ),
   ],
 );

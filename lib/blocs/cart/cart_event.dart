@@ -10,14 +10,20 @@ class CartLoadingEvent extends CartEvent {
   const CartLoadingEvent();
 }
 
-class CartProductIncrement extends CartEvent {
+class CartProductIncrementEvent extends CartEvent {
   final List<AddToCartModel> cartProductList;
   final int cartProductIndex;
-  const CartProductIncrement({required this.cartProductList, required this.cartProductIndex});
+  const CartProductIncrementEvent({required this.cartProductList, required this.cartProductIndex});
 }
 
-class CartProductDecrement extends CartEvent {
+class CartProductDecrementEvent extends CartEvent {
   final List<AddToCartModel> cartProductList;
   final int cartProductIndex;
-  const CartProductDecrement({required this.cartProductList, required this.cartProductIndex});
+  const CartProductDecrementEvent({required this.cartProductList, required this.cartProductIndex});
+}
+
+class CartItemRemoveEvent extends CartEvent {
+  final List<AddToCartModel> cartProductList;
+  final int cartProductIndex;
+  const CartItemRemoveEvent({required this.cartProductList, required this.cartProductIndex});
 }

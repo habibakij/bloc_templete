@@ -204,7 +204,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           if (state is ProductDetailLoadedState) {
             return state.product.image != null && state.product.image!.isNotEmpty
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 16.0, top: 8.0),
                     child: Row(
                       children: [
                         Expanded(

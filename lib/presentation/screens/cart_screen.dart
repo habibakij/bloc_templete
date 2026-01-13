@@ -1,13 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_template/blocs/cart/cart_bloc.dart';
+import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
 import 'package:flutter_bloc_template/core/theme/app_style.dart';
 import 'package:flutter_bloc_template/core/utils/helper/asset_manager.dart';
 import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_button.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
 import 'package:flutter_bloc_template/core/utils/widget/common_app_bar.dart';
-import 'package:flutter_bloc_template/core/utils/widget/snackbar.dart';
+import 'package:flutter_bloc_template/data/model/custom/add_to_cart_model.dart';
+import 'package:flutter_bloc_template/presentation/widgets/cart/cart_quantity_action.dart';
+import 'package:go_router/go_router.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -94,13 +98,17 @@ class _CartScreenState extends State<CartScreen> {
                                     "৳${context.read<CartBloc>().cartItemPriceCalculation(item.productDetailsModel?.price ?? 0, item.quantity ?? 1).toStringAsFixed(2)}",
                                     style: AppTextStyles.title(fontSize: 14),
                                   ),
-                                  _QuantitySelector(
+                                  CartQuantityAction(
                                     quantity: item.quantity ?? 1,
                                     onAdd: () {
-                                      context.read<CartBloc>().add(CartProductIncrement(cartProductList: state.cartProductList, cartProductIndex: state.cartProductList.indexOf(item)));
+                                      context.read<CartBloc>().add(CartProductIncrementEvent(cartProductList: state.cartProductList, cartProductIndex: state.cartProductList.indexOf(item)));
                                     },
                                     onRemove: () {
-                                      context.read<CartBloc>().add(CartProductDecrement(cartProductList: state.cartProductList, cartProductIndex: state.cartProductList.indexOf(item)));
+                                      if (item.quantity! < 2) {
+                                        _cartItemDeleteConfirmationDialog(context, state.cartProductList, state.cartProductList.indexOf(item));
+                                      } else {
+                                        context.read<CartBloc>().add(CartProductDecrementEvent(cartProductList: state.cartProductList, cartProductIndex: state.cartProductList.indexOf(item)));
+                                      }
                                     },
                                   ),
                                 ],
@@ -153,7 +161,7 @@ class _CartScreenState extends State<CartScreen> {
                             children: [
                               Text("You save: ", style: AppTextStyles.regular()),
                               AppWidget.width(8),
-                              Text("৳${(state.cartProductList.length * 20).toDouble()}", style: AppTextStyles.regular(fontWeight: FontWeight.w500)),
+                              Text("৳${(context.read<CartBloc>().discountCalculation(state.cartProductList)).toDouble()}", style: AppTextStyles.regular(fontWeight: FontWeight.w500)),
                             ],
                           ),
                         ],
@@ -167,7 +175,7 @@ class _CartScreenState extends State<CartScreen> {
                           borderRadius: 12,
                           backgroundColor: AppColors.toneColor,
                           onPressed: () {
-                            AppSnackBar.info("Product buying");
+                            context.pushNamed(AppRoutes.ORDER_CONFIRMATION);
                           },
                         ),
                       ),
@@ -182,57 +190,27 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
-}
 
-class _QuantitySelector extends StatelessWidget {
-  final int quantity;
-  final VoidCallback onAdd;
-  final VoidCallback onRemove;
-
-  const _QuantitySelector({required this.quantity, required this.onAdd, required this.onRemove});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 34,
-      child: Row(
-        children: [
-          InkWell(
-            radius: 4,
-            focusColor: AppColors.grey,
-            onTap: onRemove,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.greyLiteBorder),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6),
-                child: quantity < 2 ? Icon(Icons.delete, size: 12, color: AppColors.dartRed) : Icon(Icons.remove, size: 12, color: AppColors.dartRed),
-              ),
-            ),
+  void _cartItemDeleteConfirmationDialog(BuildContext context, List<AddToCartModel> cartProductList, int index) {
+    showCupertinoDialog<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Text('Alert !', style: AppTextStyles.title()),
+        content: Text('Are you sure to delete this item ?', style: AppTextStyles.regular()),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Text(
-              quantity.toString(),
-              style: AppTextStyles.title(fontSize: 16),
-            ),
-          ),
-          InkWell(
-            radius: 4,
-            focusColor: AppColors.grey,
-            onTap: onAdd,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6),
-                child: Icon(Icons.add, size: 12),
-              ),
-            ),
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            isDestructiveAction: true,
+            onPressed: () {
+              context.read<CartBloc>().add(CartItemRemoveEvent(cartProductList: cartProductList, cartProductIndex: index));
+              Navigator.pop(context);
+            },
+            child: const Text('Delete'),
           ),
         ],
       ),

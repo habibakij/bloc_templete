@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
 import 'package:flutter_bloc_template/core/theme/app_style.dart';
 import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
+import 'package:go_router/go_router.dart';
 
-class CommonDrawer extends StatelessWidget {
-  const CommonDrawer({super.key});
+class DrawerWidget extends StatelessWidget {
+  const DrawerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,33 +19,26 @@ class CommonDrawer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(Icons.person, size: 80),
-                Text("John Doe", style: AppTextStyles.regular()),
-                Text("johndoe@example.com", style: AppTextStyles.regular()),
+                Text("Akij Khan", style: AppTextStyles.regular()),
+                Text("ak.khan@example.com", style: AppTextStyles.regular()),
               ],
             ),
           ),
           _buildDrawerItem(
-            icon: Icons.home,
-            text: "Home",
+            icon: Icons.shopping_cart,
+            text: "My Order",
             onTap: () {
+              context.pushNamed(AppRoutes.MY_ORDER);
               Navigator.pop(context);
-              debugPrint("Home Clicked");
+              debugPrint("my_order");
             },
           ),
           _buildDrawerItem(
-            icon: Icons.settings,
-            text: "Settings",
+            icon: Icons.person,
+            text: "Profile",
             onTap: () {
               Navigator.pop(context);
-              debugPrint("Settings Clicked");
-            },
-          ),
-          _buildDrawerItem(
-            icon: Icons.info,
-            text: "About",
-            onTap: () {
-              Navigator.pop(context);
-              debugPrint("About Clicked");
+              debugPrint("profile");
             },
           ),
           const Divider(),
@@ -52,7 +47,7 @@ class CommonDrawer extends StatelessWidget {
             text: "Logout",
             onTap: () {
               Navigator.pop(context);
-              debugPrint("Logout Clicked");
+              debugPrint("logout");
             },
           ),
         ],
@@ -62,8 +57,8 @@ class CommonDrawer extends StatelessWidget {
 
   Widget _buildDrawerItem({required IconData icon, required String text, required VoidCallback onTap}) {
     return ListTile(
-      leading: Icon(icon, color: Colors.blue),
-      title: Text(text, style: AppTextStyles.regular()),
+      leading: Icon(icon, color: AppColors.primaryColor),
+      title: Text(text, style: AppTextStyles.regular(fontWeight: FontWeight.w500)),
       onTap: onTap,
     );
   }

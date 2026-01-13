@@ -53,11 +53,7 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
     emit(const ProductDetailsLoadingState());
     final quantity = repository.getQuantity;
     repository.addToCart(
-      AddToCartModel(
-        uID: DateTime.now().microsecondsSinceEpoch,
-        quantity: quantity,
-        productDetailsModel: event.product,
-      ),
+      AddToCartModel(uID: DateTime.now().microsecondsSinceEpoch, quantity: quantity, productDetailsModel: event.product),
     );
     final cartProducts = repository.getCartProducts();
     emit(ProductDetailLoadedState(event.product, cartProducts, quantity));
