@@ -34,6 +34,10 @@ class ProductRepository {
     return List.from(_cartProducts); // Return copy to prevent external modification
   }
 
+  void cartClear() {
+    _cartProducts.clear();
+  }
+
   void addProductQuantity() {
     quantity++;
   }

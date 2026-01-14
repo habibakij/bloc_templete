@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_template/blocs/cart/cart_bloc.dart';
 import 'package:flutter_bloc_template/blocs/details/details_bloc.dart';
 import 'package:flutter_bloc_template/blocs/home/home_bloc.dart';
+import 'package:flutter_bloc_template/blocs/order_confirmation/confirmation_bloc.dart';
 import 'package:flutter_bloc_template/blocs/splash/splash_cubit.dart';
 import 'package:flutter_bloc_template/core/navigation/app_router.dart';
 import 'package:flutter_bloc_template/core/theme/app_theme.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => HomeBloc(context.read<ProductRepository>())..add(DataFetchingEvent())),
           BlocProvider(create: (context) => DetailsBloc(context.read<ProductRepository>())..add(ProductDetailsInitEvent())),
           BlocProvider(create: (context) => CartBloc(context.read<ProductRepository>())..add(CartLoadingEvent())),
+          BlocProvider(create: (context) => ConfirmationBloc(context.read<ProductRepository>())..add(CartClearEvent())),
         ],
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,

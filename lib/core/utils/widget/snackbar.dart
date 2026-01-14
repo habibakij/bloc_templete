@@ -40,6 +40,6 @@ class AppSnackBar {
   }
 
   static void warning(String message) {
-    show(message: message, backgroundColor: AppColors.warning);
+    show(message: message, backgroundColor: AppColors.toneColor);
   }
 }

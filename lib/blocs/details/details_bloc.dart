@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc_template/data/model/custom/add_to_cart_model.dart';
 import 'package:flutter_bloc_template/data/model/response/product_details_model.dart';
+import 'package:flutter_bloc_template/data/model/response/product_model.dart';
 import 'package:flutter_bloc_template/data/repositories/product_repository.dart';
 
 part 'details_event.dart';
@@ -19,15 +20,21 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
   }
 
   /// get product details
+  List<ProductModel> likeProductList = [];
   FutureOr<void> onFetchDetailsData(ProductDetailsInitEvent event, Emitter<DetailsState> emit) async {
     emit(const ProductDetailsLoadingState());
     repository.resetProductQuantity();
     try {
-      final product = await repository.getProductById(event.productID ?? 0);
+      final productDetails = await repository.getProductById(event.productID ?? 0);
       final cartProducts = repository.getCartProducts();
       final productQuantity = repository.getQuantity;
-      final products = await repository.getProducts() ?? [];
-      emit(ProductDetailLoadedState(product ?? ProductDetailsModel(), cartProducts, productQuantity));
+      if (likeProductList.isEmpty) {
+        likeProductList = await repository.getProducts() ?? [];
+      }
+      if (likeProductList.any((p) => p.id == productDetails?.id)) {
+        likeProductList.removeWhere((p) => p.id == productDetails?.id);
+      }
+      emit(ProductDetailLoadedState(likeProductList, productDetails ?? ProductDetailsModel(), cartProducts, productQuantity));
     } catch (e) {
       emit(ProductDetailsErrorState(e.toString()));
     }
@@ -38,7 +45,7 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
     emit(const ProductDetailsLoadingState());
     repository.addProductQuantity();
     final quantity = repository.getQuantity;
-    emit(ProductDetailLoadedState(event.product, event.cartProductsList, quantity));
+    emit(ProductDetailLoadedState(event.likeProductList, event.productDetails, event.cartProductsList, quantity));
   }
 
   /// product quantity decrement
@@ -46,7 +53,7 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
     emit(const ProductDetailsLoadingState());
     repository.removeProductQuantity();
     final quantity = repository.getQuantity;
-    emit(ProductDetailLoadedState(event.product, event.cartProductsList, quantity));
+    emit(ProductDetailLoadedState(event.likeProductList, event.productDetails, event.cartProductsList, quantity));
   }
 
   /// product add to cart
@@ -54,9 +61,13 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
     emit(const ProductDetailsLoadingState());
     final quantity = repository.getQuantity;
     repository.addToCart(
-      AddToCartModel(uID: DateTime.now().microsecondsSinceEpoch, quantity: quantity, productDetailsModel: event.product),
+      AddToCartModel(
+        uID: DateTime.now().microsecondsSinceEpoch,
+        quantity: quantity,
+        productDetailsModel: event.productDetails,
+      ),
     );
     final cartProducts = repository.getCartProducts();
-    emit(ProductDetailLoadedState(event.product, cartProducts, quantity));
+    emit(ProductDetailLoadedState(event.likeProductList, event.productDetails, cartProducts, quantity));
   }
 }

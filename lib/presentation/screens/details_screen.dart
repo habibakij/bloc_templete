@@ -82,8 +82,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 },
               ));
             } else if (state is ProductDetailLoadedState) {
-              final product = state.product;
-              return product.image == null || product.image!.isEmpty
+              final productDetails = state.productDetails;
+              return productDetails.image == null || productDetails.image!.isEmpty
                   ? Center(child: ProductDetailsLoading(
                       onRefresh: () async {
                         context.read<DetailsBloc>().add(ProductDetailsInitEvent(productID: widget.productId));
@@ -97,7 +97,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             width: double.infinity,
                             constraints: const BoxConstraints(maxHeight: 500),
                             child: Image.network(
-                              product.image ?? '',
+                              productDetails.image ?? '',
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
@@ -113,7 +113,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(product.title ?? '', style: AppTextStyles.title()),
+                                Text(productDetails.title ?? '', style: AppTextStyles.title()),
                                 AppWidget.height(8),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -122,14 +122,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          product.price != null ? "৳${product.price?.toStringAsFixed(2)}" : "",
+                                          productDetails.price != null ? "৳${productDetails.price?.toStringAsFixed(2)}" : "",
                                           style: AppTextStyles.title(fontWeight: FontWeight.w600, color: AppColors.primaryColor),
                                         ),
                                         AppWidget.width(4),
                                         Padding(
                                           padding: const EdgeInsets.only(bottom: 2.0),
                                           child: Text(
-                                            product.price != null ? "৳${(product.price! + 20).toStringAsFixed(2)}" : '',
+                                            productDetails.price != null ? "৳${(productDetails.price! + 20).toStringAsFixed(2)}" : '',
                                             style: AppTextStyles.discountStrikeStyle(),
                                           ),
                                         ),
@@ -140,7 +140,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                       radius: 4,
                                       focusColor: AppColors.grey,
                                       onTap: () {
-                                        context.read<DetailsBloc>().add(RemoveProductQuantityEvent(product: product, cartProductsList: state.cartProductsList));
+                                        context.read<DetailsBloc>().add(RemoveProductQuantityEvent(likeProductList: state.likeProductList, productDetails: productDetails, cartProductsList: state.cartProductsList));
                                       },
                                       child: DecoratedBox(
                                         decoration: BoxDecoration(
@@ -163,7 +163,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                       radius: 4,
                                       focusColor: AppColors.red,
                                       onTap: () {
-                                        context.read<DetailsBloc>().add(AddProductQuantityEvent(product: product, cartProductsList: state.cartProductsList));
+                                        context.read<DetailsBloc>().add(AddProductQuantityEvent(likeProductList: state.likeProductList, productDetails: productDetails, cartProductsList: state.cartProductsList));
                                       },
                                       child: DecoratedBox(
                                         decoration: BoxDecoration(
@@ -184,15 +184,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     Icon(Icons.star, size: 20, color: AppColors.orangeColor),
                                     AppWidget.width(4),
                                     Text(
-                                      '${product.rating?.rate ?? ''} (${product.rating?.count ?? ''})',
+                                      '${productDetails.rating?.rate ?? ''} (${productDetails.rating?.count ?? ''})',
                                       style: AppTextStyles.regular(),
                                     ),
                                   ],
                                 ),
                                 AppWidget.height(8),
-                                product.description != null ? Text('Description', style: AppTextStyles.title()) : SizedBox.shrink(),
+                                productDetails.description != null ? Text('Description', style: AppTextStyles.title()) : SizedBox.shrink(),
                                 AppWidget.height(8),
-                                Text(product.description ?? '', style: AppTextStyles.regular()),
+                                Text(productDetails.description ?? '', style: AppTextStyles.regular()),
                                 AppWidget.height(8),
                               ],
                             ),
@@ -205,11 +205,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             height: 220,
                             child: ListView.separated(
                               padding: const EdgeInsets.all(12),
-                              itemCount: 15,
+                              itemCount: state.likeProductList.length,
                               separatorBuilder: (_, index) => const SizedBox(width: 10),
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
-                                return ProductDetailsCardWidget(product: product);
+                                final singleProduct = state.likeProductList[index];
+                                return ProductDetailsCardWidget(product: singleProduct);
                               },
                             ),
                           ),
@@ -245,7 +246,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
       bottomNavigationBar: BlocBuilder<DetailsBloc, DetailsState>(
         builder: (context, state) {
           if (state is ProductDetailLoadedState) {
-            return state.product.image != null && state.product.image!.isNotEmpty
+            return state.productDetails.image != null && state.productDetails.image!.isNotEmpty
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 16.0, top: 8.0),
                     child: Row(
@@ -269,7 +270,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             borderRadius: 20,
                             backgroundColor: AppColors.primaryColor,
                             onPressed: () {
-                              context.read<DetailsBloc>().add(AddToCartEvent(product: state.product));
+                              context.read<DetailsBloc>().add(AddToCartEvent(likeProductList: state.likeProductList, productDetails: state.productDetails));
                             },
                           ),
                         ),

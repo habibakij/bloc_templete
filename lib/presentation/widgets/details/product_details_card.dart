@@ -3,11 +3,11 @@ import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
 import 'package:flutter_bloc_template/core/theme/app_style.dart';
 import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
-import 'package:flutter_bloc_template/data/model/response/product_details_model.dart';
+import 'package:flutter_bloc_template/data/model/response/product_model.dart';
 import 'package:go_router/go_router.dart';
 
 class ProductDetailsCardWidget extends StatelessWidget {
-  final ProductDetailsModel product;
+  final ProductModel product;
   const ProductDetailsCardWidget({super.key, required this.product});
 
   @override

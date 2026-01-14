@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_template/blocs/order_confirmation/confirmation_bloc.dart';
 import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
 import 'package:flutter_bloc_template/core/theme/app_style.dart';
 import 'package:flutter_bloc_template/core/utils/helper/asset_manager.dart';
@@ -37,6 +39,7 @@ class OrderConfirmationScreen extends StatelessWidget {
               borderRadius: 20,
               backgroundColor: AppColors.toneColor,
               onPressed: () {
+                context.read<ConfirmationBloc>().add(CartClearEvent());
                 context.pushNamed(AppRoutes.HOME_SCREEN);
               },
             ),
@@ -48,6 +51,7 @@ class OrderConfirmationScreen extends StatelessWidget {
               borderRadius: 20,
               backgroundColor: AppColors.primaryColor,
               onPressed: () {
+                //context.read<ConfirmationBloc>().add(CartClearEvent());
                 context.pushNamed(AppRoutes.MY_ORDER);
               },
             ),

@@ -4,23 +4,25 @@ abstract class DetailsEvent {}
 
 class ProductDetailsInitEvent extends DetailsEvent {
   final int? productID;
-  final bool isAddToCart;
-  ProductDetailsInitEvent({this.productID, this.isAddToCart = false});
+  ProductDetailsInitEvent({this.productID});
 }
 
 class AddToCartEvent extends DetailsEvent {
-  final ProductDetailsModel product;
-  AddToCartEvent({required this.product});
+  final List<ProductModel> likeProductList;
+  final ProductDetailsModel productDetails;
+  AddToCartEvent({required this.likeProductList, required this.productDetails});
 }
 
 class AddProductQuantityEvent extends DetailsEvent {
-  final ProductDetailsModel product;
+  final List<ProductModel> likeProductList;
+  final ProductDetailsModel productDetails;
   final List<AddToCartModel> cartProductsList;
-  AddProductQuantityEvent({required this.product, required this.cartProductsList});
+  AddProductQuantityEvent({required this.likeProductList, required this.productDetails, required this.cartProductsList});
 }
 
 class RemoveProductQuantityEvent extends DetailsEvent {
-  final ProductDetailsModel product;
+  final List<ProductModel> likeProductList;
+  final ProductDetailsModel productDetails;
   final List<AddToCartModel> cartProductsList;
-  RemoveProductQuantityEvent({required this.product, required this.cartProductsList});
+  RemoveProductQuantityEvent({required this.likeProductList, required this.productDetails, required this.cartProductsList});
 }
