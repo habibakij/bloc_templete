@@ -25,8 +25,9 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
     try {
       final product = await repository.getProductById(event.productID ?? 0);
       final cartProducts = repository.getCartProducts();
-      final quantity = repository.getQuantity;
-      emit(ProductDetailLoadedState(product ?? ProductDetailsModel(), cartProducts, quantity));
+      final productQuantity = repository.getQuantity;
+      final products = await repository.getProducts() ?? [];
+      emit(ProductDetailLoadedState(product ?? ProductDetailsModel(), cartProducts, productQuantity));
     } catch (e) {
       emit(ProductDetailsErrorState(e.toString()));
     }

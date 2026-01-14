@@ -6,7 +6,7 @@ import 'package:flutter_bloc_template/data/model/response/product_model.dart';
 
 class ProductRepository {
   final _apiService = ApiService();
-  List<AddToCartModel> _cartProducts = [];
+  final List<AddToCartModel> _cartProducts = [];
   int quantity = 1;
 
   Future<List<ProductModel>?> getProducts() async {

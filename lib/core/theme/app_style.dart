@@ -74,7 +74,7 @@ class AppTextStyles {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      color: color ?? AppColors.dartRed,
+      color: color ?? AppColors.darkRed,
       letterSpacing: letterSpacing,
       height: height,
       decoration: decoration ?? TextDecoration.none,

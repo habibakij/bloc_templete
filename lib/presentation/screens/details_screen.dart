@@ -8,6 +8,7 @@ import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_button.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
 import 'package:flutter_bloc_template/core/utils/widget/common_app_bar.dart';
+import 'package:flutter_bloc_template/presentation/widgets/details/product_details_card.dart';
 import 'package:flutter_bloc_template/presentation/widgets/shimmer/details/product_details_loading.dart';
 import 'package:go_router/go_router.dart';
 
@@ -37,7 +38,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               if (state is ProductDetailLoadedState) {
                 return DecoratedBox(
                   decoration: BoxDecoration(
-                    color: AppColors.greyLiteBorder.withValues(alpha: 0.3),
+                    color: AppColors.greyLiteBorder.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
                   ),
                   child: InkWell(
@@ -49,22 +50,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     child: Stack(
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(6.0),
-                          child: Icon(size: 20.0, Icons.shopping_cart, color: AppColors.black),
+                          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                          child: Icon(size: 16.0, Icons.shopping_cart, color: AppColors.primaryDarkColor),
                         ),
                         Positioned(
-                          right: 0.0,
-                          top: 0.0,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryColor,
-                              borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                            ),
-                            child: Text(
-                              "${state.cartProductsList.length}",
-                              style: AppTextStyles.regular(color: AppColors.red, fontSize: 12, fontWeight: FontWeight.w600),
-                            ),
+                          right: 10.0,
+                          top: 4.0,
+                          child: Text(
+                            "${state.cartProductsList.length}",
+                            style: AppTextStyles.regular(color: AppColors.white, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ],
@@ -128,8 +122,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          product.price != null ? '৳${product.price}' : '',
-                                          style: AppTextStyles.title(fontWeight: FontWeight.w600, color: AppColors.green),
+                                          product.price != null ? "৳${product.price?.toStringAsFixed(2)}" : "",
+                                          style: AppTextStyles.title(fontWeight: FontWeight.w600, color: AppColors.primaryColor),
                                         ),
                                         AppWidget.width(4),
                                         Padding(
@@ -142,23 +136,56 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                       ],
                                     ),
                                     AppWidget.width(30),
-                                    IconButton(
-                                      icon: const Icon(Icons.remove, size: 18),
-                                      onPressed: () {
+                                    InkWell(
+                                      radius: 4,
+                                      focusColor: AppColors.grey,
+                                      onTap: () {
                                         context.read<DetailsBloc>().add(RemoveProductQuantityEvent(product: product, cartProductsList: state.cartProductsList));
                                       },
+                                      child: DecoratedBox(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: AppColors.greyLiteBorder),
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
+                                          child: Icon(Icons.remove, size: 18, color: AppColors.primaryDarkColor),
+                                        ),
+                                      ),
                                     ),
                                     AppWidget.width(8),
                                     Text(
-                                      state.quantity.toString(),
-                                      style: const TextStyle(fontSize: 16),
+                                      state.productQuantity.toString(),
+                                      style: AppTextStyles.regular(),
                                     ),
                                     AppWidget.width(8),
-                                    IconButton(
-                                      icon: const Icon(Icons.add, size: 18),
-                                      onPressed: () {
+                                    InkWell(
+                                      radius: 4,
+                                      focusColor: AppColors.red,
+                                      onTap: () {
                                         context.read<DetailsBloc>().add(AddProductQuantityEvent(product: product, cartProductsList: state.cartProductsList));
                                       },
+                                      child: DecoratedBox(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: AppColors.greyLiteBorder),
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
+                                          child: Icon(Icons.add, size: 18, color: AppColors.primaryDarkColor),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.star, size: 20, color: AppColors.orangeColor),
+                                    AppWidget.width(4),
+                                    Text(
+                                      '${product.rating?.rate ?? ''} (${product.rating?.count ?? ''})',
+                                      style: AppTextStyles.regular(),
                                     ),
                                   ],
                                 ),
@@ -166,8 +193,24 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 product.description != null ? Text('Description', style: AppTextStyles.title()) : SizedBox.shrink(),
                                 AppWidget.height(8),
                                 Text(product.description ?? '', style: AppTextStyles.regular()),
-                                AppWidget.height(12),
+                                AppWidget.height(8),
                               ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: Text('You may like', style: AppTextStyles.title()),
+                          ),
+                          SizedBox(
+                            height: 220,
+                            child: ListView.separated(
+                              padding: const EdgeInsets.all(12),
+                              itemCount: 15,
+                              separatorBuilder: (_, index) => const SizedBox(width: 10),
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return ProductDetailsCardWidget(product: product);
+                              },
                             ),
                           ),
                         ],
@@ -180,7 +223,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.error_outline, size: 60, color: AppColors.dartRed),
+                      Icon(Icons.error_outline, size: 60, color: AppColors.darkRed),
                       AppWidget.height(12),
                       Text('Error: ${state.message}', style: AppTextStyles.errorStyle()),
                       AppWidget.height(12),

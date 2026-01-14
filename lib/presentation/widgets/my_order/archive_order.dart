@@ -67,7 +67,7 @@ class ArchiveOrder extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              "by Cart up",
+                              "seller Cart up",
                               style: AppTextStyles.hintStyle(color: AppColors.green),
                             ),
                             AppWidget.width(12),
@@ -80,10 +80,10 @@ class ArchiveOrder extends StatelessWidget {
                         DecoratedBox(
                           decoration: BoxDecoration(
                             color: AppColors.greyLiteBorder,
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 3.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
                             child: Text(
                               "complete",
                               style: AppTextStyles.regular(),

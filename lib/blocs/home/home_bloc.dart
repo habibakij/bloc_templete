@@ -17,7 +17,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<FilterRemoveEvent>(_onFilterRemove);
   }
 
-  /// get remote product list
+  /// get product list
   Future<void> _onFetchProducts(DataFetchingEvent event, Emitter<HomeState> emit) async {
     emit(const ProductLoadingState());
     try {

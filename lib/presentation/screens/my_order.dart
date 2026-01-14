@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
 import 'package:flutter_bloc_template/core/theme/app_style.dart';
 import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 import 'package:flutter_bloc_template/core/utils/widget/common_app_bar.dart';
 import 'package:flutter_bloc_template/presentation/widgets/my_order/active_order.dart';
 import 'package:flutter_bloc_template/presentation/widgets/my_order/archive_order.dart';
+import 'package:go_router/go_router.dart';
 
 class MyOrder extends StatelessWidget {
   const MyOrder({super.key});
@@ -16,7 +18,10 @@ class MyOrder extends StatelessWidget {
       child: Scaffold(
         appBar: CommonAppBar(
           title: "My Orders",
-          leadingVisibility: false,
+          leadingVisibility: true,
+          onLeadingTab: () {
+            context.goNamed(AppRoutes.HOME_SCREEN);
+          },
           bottomWidget: PreferredSize(
             preferredSize: const Size.fromHeight(48),
             child: Stack(

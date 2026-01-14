@@ -91,7 +91,7 @@ class _CartScreenState extends State<CartScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "by Cart up",
+                                    "seller Cart up",
                                     style: AppTextStyles.hintStyle(color: AppColors.green),
                                   ),
                                   Text(

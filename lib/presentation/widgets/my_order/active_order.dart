@@ -67,7 +67,7 @@ class ActiveOrder extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              "by Cart up",
+                              "seller Cart up",
                               style: AppTextStyles.hintStyle(color: AppColors.green),
                             ),
                             AppWidget.width(12),
@@ -80,10 +80,10 @@ class ActiveOrder extends StatelessWidget {
                         DecoratedBox(
                           decoration: BoxDecoration(
                             color: AppColors.green.withValues(alpha: 0.6),
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 3.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
                             child: Text(
                               "active",
                               style: AppTextStyles.regular(),

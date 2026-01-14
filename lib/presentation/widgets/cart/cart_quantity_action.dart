@@ -26,7 +26,7 @@ class CartQuantityAction extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6),
-                child: quantity < 2 ? Icon(Icons.delete, size: 12, color: AppColors.dartRed) : Icon(Icons.remove, size: 12, color: AppColors.dartRed),
+                child: quantity < 2 ? Icon(Icons.delete, size: 12, color: AppColors.darkRed) : Icon(Icons.remove, size: 12, color: AppColors.darkRed),
               ),
             ),
           ),
