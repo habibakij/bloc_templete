@@ -90,9 +90,11 @@ class _CartScreenState extends State<CartScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    "seller Cart up",
-                                    style: AppTextStyles.hintStyle(color: AppColors.green),
+                                  Row(
+                                    children: [
+                                      Text("seller ", style: AppTextStyles.regular(fontSize: 12)),
+                                      Text("Cart up", style: AppTextStyles.regular(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.primaryDarkColor)),
+                                    ],
                                   ),
                                   Text(
                                     "৳${context.read<CartBloc>().cartItemPriceCalculation(item.productDetailsModel?.price ?? 0, item.quantity ?? 1).toStringAsFixed(2)}",

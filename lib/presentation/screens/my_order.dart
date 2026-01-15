@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_template/blocs/my_order/order_bloc.dart';
 import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
 import 'package:flutter_bloc_template/core/theme/app_style.dart';
 import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
@@ -33,6 +35,7 @@ class MyOrder extends StatelessWidget {
                     indicatorSize: TabBarIndicatorSize.tab,
                     indicatorColor: AppColors.primaryDarkColor,
                     labelStyle: AppTextStyles.title(fontSize: 16.0),
+                    unselectedLabelStyle: AppTextStyles.regular(),
                     tabs: [
                       Tab(text: "Active"),
                       Tab(text: "Archive"),
@@ -47,11 +50,20 @@ class MyOrder extends StatelessWidget {
             ),
           ),
         ),
-        body: TabBarView(
-          children: [
-            ActiveOrder(),
-            ArchiveOrder(),
-          ],
+        body: BlocBuilder<OrderBloc, OrderState>(
+          builder: (context, state) {
+            if (state is OrderLoadingState) {
+              return Center(child: Text("Loading..."));
+            } else if (state is OrderLoadedState) {
+              return TabBarView(
+                children: [
+                  ActiveOrder(activeOrderList: state.orderList),
+                  ArchiveOrder(archiveOrderList: state.orderList),
+                ],
+              );
+            }
+            return Center(child: Text("Loading data..."));
+          },
         ),
       ),
     );

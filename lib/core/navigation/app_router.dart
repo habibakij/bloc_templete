@@ -25,7 +25,7 @@ final GoRouter appRouter = GoRouter(
       path: "${AppRoutes.DETAILS_SCREEN}/:id",
       name: AppRoutes.DETAILS_SCREEN,
       pageBuilder: (context, state) {
-        final int itemId = int.parse(state.pathParameters['id']!);
+        final int itemId = int.parse(state.pathParameters['id'] ?? '0');
         return customTransition(state: state, child: DetailsScreen(productId: itemId));
       },
     ),

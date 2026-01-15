@@ -24,7 +24,7 @@ class OrderConfirmationScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(correctIcon, height: 120, width: 120, fit: BoxFit.cover),
-            Text("Recorded !", style: AppTextStyles.title()),
+            Text("Recorded", style: AppTextStyles.title()),
             AppWidget.height(8.0),
             Text(
               "Your order has been recorded, you will get confirmation very soon thank you.",

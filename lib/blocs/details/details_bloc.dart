@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc_template/data/model/custom/add_to_cart_model.dart';
 import 'package:flutter_bloc_template/data/model/response/product_details_model.dart';
 import 'package:flutter_bloc_template/data/model/response/product_model.dart';
@@ -13,6 +14,7 @@ part 'details_state.dart';
 class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
   final ProductRepository repository;
   DetailsBloc(this.repository) : super(ProductDetailsInit()) {
+    on<ProductDetailsRegisterEvent>(onRegisterDetails);
     on<ProductDetailsInitEvent>(onFetchDetailsData);
     on<AddProductQuantityEvent>(onIncrementProductQuantity);
     on<RemoveProductQuantityEvent>(onDecrementProductQuantity);
@@ -31,9 +33,9 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
       if (likeProductList.isEmpty) {
         likeProductList = await repository.getProducts() ?? [];
       }
-      if (likeProductList.any((p) => p.id == productDetails?.id)) {
+      /*if (likeProductList.any((p) => p.id == productDetails?.id)) {
         likeProductList.removeWhere((p) => p.id == productDetails?.id);
-      }
+      }*/
       emit(ProductDetailLoadedState(likeProductList, productDetails ?? ProductDetailsModel(), cartProducts, productQuantity));
     } catch (e) {
       emit(ProductDetailsErrorState(e.toString()));
@@ -69,5 +71,9 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
     );
     final cartProducts = repository.getCartProducts();
     emit(ProductDetailLoadedState(event.likeProductList, event.productDetails, cartProducts, quantity));
+  }
+
+  FutureOr<void> onRegisterDetails(ProductDetailsRegisterEvent event, Emitter<DetailsState> emit) {
+    debugPrint("onRegister_calling...");
   }
 }

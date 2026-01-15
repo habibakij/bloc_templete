@@ -47,7 +47,7 @@ class ProductDetailsCardWidget extends StatelessWidget {
                   Row(
                     children: [
                       Text("seller ", style: AppTextStyles.regular(fontSize: 12)),
-                      Text("Cart up", style: AppTextStyles.regular(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.primaryColor)),
+                      Text("Cart up", style: AppTextStyles.regular(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.primaryDarkColor)),
                     ],
                   ),
                   AppWidget.height(4),

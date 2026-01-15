@@ -51,7 +51,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-                          child: Icon(size: 16.0, Icons.shopping_cart, color: AppColors.primaryDarkColor),
+                          child: Icon(size: 16.0, Icons.shopping_cart, color: AppColors.primaryDarkTinColor),
                         ),
                         Positioned(
                           right: 10.0,

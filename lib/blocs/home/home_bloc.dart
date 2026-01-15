@@ -29,6 +29,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           categoryList.add(product);
         }
       }
+      repository.cartClear();
       emit(ProductLoadedState(products, categoryList));
     } catch (e) {
       emit(ProductErrorState(e.toString()));
