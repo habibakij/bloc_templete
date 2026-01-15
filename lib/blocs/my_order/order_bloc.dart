@@ -18,7 +18,11 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   FutureOr<void> onLoadingOrderData(OrderLoadingEvent event, Emitter<OrderState> emit) {
     emit(OrderLoadingState());
     final orderList = repository.getCartProducts();
-    emit(OrderLoadedState(orderList: orderList));
+    if (orderList.isEmpty) {
+      emit(OrderLoadingState());
+    } else {
+      emit(OrderLoadedState(orderList: orderList));
+    }
   }
 
   /// cart single item price calculation

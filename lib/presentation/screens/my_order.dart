@@ -7,6 +7,7 @@ import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 import 'package:flutter_bloc_template/core/utils/widget/common_app_bar.dart';
 import 'package:flutter_bloc_template/presentation/widgets/my_order/active_order.dart';
 import 'package:flutter_bloc_template/presentation/widgets/my_order/archive_order.dart';
+import 'package:flutter_bloc_template/presentation/widgets/shimmer/cart/cart_loading.dart';
 import 'package:go_router/go_router.dart';
 
 class MyOrder extends StatelessWidget {
@@ -53,7 +54,12 @@ class MyOrder extends StatelessWidget {
         body: BlocBuilder<OrderBloc, OrderState>(
           builder: (context, state) {
             if (state is OrderLoadingState) {
-              return Center(child: Text("Loading..."));
+              return TabBarView(
+                children: [
+                  CartLoading(),
+                  CartLoading(),
+                ],
+              );
             } else if (state is OrderLoadedState) {
               return TabBarView(
                 children: [
