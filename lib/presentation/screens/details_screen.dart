@@ -8,6 +8,7 @@ import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_button.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
 import 'package:flutter_bloc_template/core/utils/widget/common_app_bar.dart';
+import 'package:flutter_bloc_template/core/utils/widget/snackbar.dart';
 import 'package:flutter_bloc_template/presentation/widgets/details/product_details_card.dart';
 import 'package:flutter_bloc_template/presentation/widgets/shimmer/details/product_details_loading.dart';
 import 'package:go_router/go_router.dart';
@@ -45,7 +46,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(50.0)),
                     focusColor: AppColors.toneColor,
                     onTap: () {
-                      context.pushNamed(AppRoutes.CART_SCREEN);
+                      if (state.cartProductsList.isNotEmpty) {
+                        context.pushNamed(AppRoutes.CART_SCREEN);
+                      } else {
+                        AppSnackBar.warning("cart empty");
+                      }
                     },
                     child: Stack(
                       children: [

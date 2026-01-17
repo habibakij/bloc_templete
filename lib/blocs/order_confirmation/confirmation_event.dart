@@ -9,3 +9,7 @@ sealed class ConfirmationEvent extends Equatable {
 class CartClearEvent extends ConfirmationEvent {
   const CartClearEvent();
 }
+
+class AddToOrderEvent extends ConfirmationEvent {
+  const AddToOrderEvent();
+}

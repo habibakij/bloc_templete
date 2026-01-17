@@ -15,6 +15,10 @@ final class OrderLoadingState extends OrderState {
   const OrderLoadingState();
 }
 
+final class OrderEmptyState extends OrderState {
+  const OrderEmptyState();
+}
+
 final class OrderLoadedState extends OrderState {
   final List<AddToCartModel> orderList;
   const OrderLoadedState({required this.orderList});

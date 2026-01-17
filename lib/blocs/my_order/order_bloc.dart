@@ -17,9 +17,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   /// fetching order list
   FutureOr<void> onLoadingOrderData(OrderLoadingEvent event, Emitter<OrderState> emit) {
     emit(OrderLoadingState());
-    final orderList = repository.getCartProducts();
+    final orderList = repository.getProductOrderList();
     if (orderList.isEmpty) {
-      emit(OrderLoadingState());
+      emit(OrderEmptyState());
     } else {
       emit(OrderLoadedState(orderList: orderList));
     }

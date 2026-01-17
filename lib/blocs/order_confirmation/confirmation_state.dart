@@ -18,3 +18,7 @@ class CartClearingState extends ConfirmationState {
 class CartClearedState extends ConfirmationState {
   const CartClearedState();
 }
+
+class AddToOrderState extends ConfirmationState {
+  const AddToOrderState();
+}

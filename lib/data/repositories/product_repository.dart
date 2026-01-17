@@ -7,6 +7,7 @@ import 'package:flutter_bloc_template/data/model/response/product_model.dart';
 class ProductRepository {
   final _apiService = ApiService();
   final List<AddToCartModel> _cartProducts = [];
+  final List<AddToCartModel> orderProductList = [];
   int quantity = 1;
 
   Future<List<ProductModel>?> getProducts() async {
@@ -32,6 +33,15 @@ class ProductRepository {
 
   List<AddToCartModel> getCartProducts() {
     return List.from(_cartProducts); // Return copy to prevent external modification
+  }
+
+  void addToOrder() {
+    orderProductList.addAll(_cartProducts);
+    cartClear();
+  }
+
+  List<AddToCartModel> getProductOrderList() {
+    return List.from(orderProductList); // Return copy to prevent external modification
   }
 
   void cartClear() {

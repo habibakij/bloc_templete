@@ -18,7 +18,7 @@ class AppTextStyles {
   }
 
   /// ---------- Regular ----------
-  static TextStyle regular({double fontSize = 14, FontWeight fontWeight = FontWeight.w400, Color? color, double letterSpacing = 0, double height = 1.2, TextDecoration? decoration, FontStyle fontStyle = FontStyle.normal}) {
+  static TextStyle regular({double fontSize = 14, FontWeight fontWeight = FontWeight.normal, Color? color, double letterSpacing = 0, double height = 1.2, TextDecoration? decoration, FontStyle fontStyle = FontStyle.normal}) {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,

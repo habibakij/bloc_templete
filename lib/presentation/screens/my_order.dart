@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_template/blocs/my_order/order_bloc.dart';
 import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
 import 'package:flutter_bloc_template/core/theme/app_style.dart';
+import 'package:flutter_bloc_template/core/utils/helper/asset_manager.dart';
 import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
+import 'package:flutter_bloc_template/core/utils/widget/app_button.dart';
 import 'package:flutter_bloc_template/core/utils/widget/common_app_bar.dart';
 import 'package:flutter_bloc_template/presentation/widgets/my_order/active_order.dart';
 import 'package:flutter_bloc_template/presentation/widgets/my_order/archive_order.dart';
@@ -66,6 +68,43 @@ class MyOrder extends StatelessWidget {
                   ActiveOrder(activeOrderList: state.orderList),
                   ArchiveOrder(archiveOrderList: state.orderList),
                 ],
+              );
+            } else if (state is OrderEmptyState) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    spacing: 12.0,
+                    children: [
+                      Image.asset(emptyIcon, fit: BoxFit.cover),
+                      RichText(
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        maxLines: 2,
+                        text: TextSpan(
+                          text: "There are no orders to your box.",
+                          style: AppTextStyles.regular(),
+                          children: <TextSpan>[
+                            TextSpan(text: "Explore products and place an order to see it here.", style: AppTextStyles.regular(fontWeight: FontWeight.w500)),
+                          ],
+                        ),
+                      ),
+                      AppButton(
+                        height: 40,
+                        title: "Order now",
+                        isLoading: false,
+                        borderRadius: 20,
+                        backgroundColor: AppColors.toneColor,
+                        onPressed: () {
+                          context.goNamed(AppRoutes.HOME_SCREEN);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               );
             }
             return Center(child: Text("Loading data..."));

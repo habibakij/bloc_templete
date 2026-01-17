@@ -1,5 +1,6 @@
 import 'package:flutter_bloc_template/core/navigation/app_routes.dart';
 import 'package:flutter_bloc_template/presentation/screens/cart_screen.dart';
+import 'package:flutter_bloc_template/presentation/screens/checkout_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/details_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/home_screen.dart';
 import 'package:flutter_bloc_template/presentation/screens/my_order.dart';
@@ -33,6 +34,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.CART_SCREEN,
       name: AppRoutes.CART_SCREEN,
       pageBuilder: (context, state) => customTransition(state: state, child: CartScreen()),
+    ),
+    GoRoute(
+      path: AppRoutes.CHECKOUT_SCREEN,
+      name: AppRoutes.CHECKOUT_SCREEN,
+      pageBuilder: (context, state) => customTransition(state: state, child: CheckoutScreen()),
     ),
     GoRoute(
       path: AppRoutes.ORDER_CONFIRMATION,

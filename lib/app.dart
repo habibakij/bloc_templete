@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_template/blocs/cart/cart_bloc.dart';
+import 'package:flutter_bloc_template/blocs/checkout/checkout_bloc.dart';
 import 'package:flutter_bloc_template/blocs/details/details_bloc.dart';
 import 'package:flutter_bloc_template/blocs/home/home_bloc.dart';
 import 'package:flutter_bloc_template/blocs/my_order/order_bloc.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => HomeBloc(context.read<ProductRepository>())..add(DataFetchingEvent())),
           BlocProvider(create: (context) => DetailsBloc(context.read<ProductRepository>())..add(ProductDetailsRegisterEvent())),
           BlocProvider(create: (context) => CartBloc(context.read<ProductRepository>())..add(CartLoadingEvent())),
+          BlocProvider(create: (context) => CheckoutBloc(context.read<ProductRepository>())..add(CheckoutLoadingEvent())),
           BlocProvider(create: (context) => ConfirmationBloc(context.read<ProductRepository>())..add(CartClearEvent())),
           BlocProvider(create: (context) => OrderBloc(context.read<ProductRepository>())..add(OrderLoadingEvent())),
         ],

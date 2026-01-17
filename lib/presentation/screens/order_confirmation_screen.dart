@@ -51,7 +51,7 @@ class OrderConfirmationScreen extends StatelessWidget {
               borderRadius: 20,
               backgroundColor: AppColors.primaryColor,
               onPressed: () {
-                //context.read<ConfirmationBloc>().add(CartClearEvent());
+                context.read<ConfirmationBloc>().add(AddToOrderEvent());
                 context.pushNamed(AppRoutes.MY_ORDER);
               },
             ),

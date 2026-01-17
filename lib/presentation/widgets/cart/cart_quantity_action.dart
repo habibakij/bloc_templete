@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_template/core/theme/app_style.dart';
 import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
+import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
 
 class CartQuantityAction extends StatelessWidget {
+  final String price;
   final int quantity;
   final VoidCallback onAdd;
   final VoidCallback onRemove;
 
-  const CartQuantityAction({super.key, required this.quantity, required this.onAdd, required this.onRemove});
+  const CartQuantityAction({super.key, required this.price, required this.quantity, required this.onAdd, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +17,11 @@ class CartQuantityAction extends StatelessWidget {
       height: 34,
       child: Row(
         children: [
+          Text(
+            "৳$price",
+            style: AppTextStyles.title(fontSize: 14),
+          ),
+          AppWidget.width(12),
           InkWell(
             radius: 4,
             focusColor: AppColors.grey,

@@ -13,3 +13,5 @@ const placeholderImage1 = "${jpgPath}placeholder_image_1.jpg";
 const svgImageSample = "${svgPath}svg_image_sample.svg";
 const sslLogo = "${pngPath}ssl_logo.png";
 const correctIcon = "${pngPath}correct_icon.png";
+const emptyIcon = "${pngPath}empty_icon.png";
+const editIcon = "${pngPath}edit_icon.png";
