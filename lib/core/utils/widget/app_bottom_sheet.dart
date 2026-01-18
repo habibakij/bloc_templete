@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_template/core/theme/app_style.dart';
 import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
-import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
 
 import 'app_button.dart';
+import 'app_widget.dart';
 
 Future<T?> showCommonBottomSheet<T>({
   required BuildContext context,
@@ -12,7 +13,6 @@ Future<T?> showCommonBottomSheet<T>({
   String? rightButtonTitle,
   VoidCallback? leftCallBack,
   VoidCallback? rightCallBack,
-  double heightRatio = 0.5,
   bool isDismissible = true,
   bool enableDrag = true,
 }) {
@@ -26,7 +26,6 @@ Future<T?> showCommonBottomSheet<T>({
     builder: (_) {
       return CommonBottomSheet(
         title: title,
-        height: heightRatio,
         leftButtonTitle: leftButtonTitle ?? "Cancel",
         rightButtonTitle: rightButtonTitle ?? "Continue",
         leftCallBack: leftCallBack ??
@@ -45,7 +44,6 @@ Future<T?> showCommonBottomSheet<T>({
 
 class CommonBottomSheet extends StatelessWidget {
   final String title;
-  final double height;
   final Widget child;
   final String leftButtonTitle;
   final String rightButtonTitle;
@@ -55,7 +53,6 @@ class CommonBottomSheet extends StatelessWidget {
   const CommonBottomSheet({
     super.key,
     required this.title,
-    required this.height,
     required this.child,
     required this.leftButtonTitle,
     required this.rightButtonTitle,
@@ -65,38 +62,29 @@ class CommonBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maxHeight = MediaQuery.of(context).size.height * height;
     return SafeArea(
       top: false,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: maxHeight),
+      child: Padding(
+        padding: MediaQuery.of(context).viewInsets,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
+              margin: const EdgeInsets.symmetric(vertical: 16),
               height: 4,
               width: 60,
               decoration: BoxDecoration(color: AppColors.grey, borderRadius: BorderRadius.circular(8)),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
+              child: Text(title, textAlign: TextAlign.center, style: AppTextStyles.title()),
             ),
             AppWidget.height(12),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: child,
-                ),
-              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: child,
             ),
+            AppWidget.height(12),
             Divider(height: 1, color: AppColors.greyLiteBorder),
             Padding(
               padding: const EdgeInsets.all(12.0),
@@ -104,7 +92,7 @@ class CommonBottomSheet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AppButton(
-                      height: 48,
+                      height: 44,
                       title: leftButtonTitle,
                       isLoading: false,
                       borderRadius: 10,
@@ -115,7 +103,7 @@ class CommonBottomSheet extends StatelessWidget {
                   AppWidget.width(16),
                   Expanded(
                     child: AppButton(
-                      height: 48,
+                      height: 44,
                       title: rightButtonTitle,
                       isLoading: false,
                       borderRadius: 10,

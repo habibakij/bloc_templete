@@ -39,6 +39,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       body: SafeArea(
         child: BlocBuilder<CheckoutBloc, CheckoutState>(
           builder: (context, state) {
+            final bool isApplyingCoupon = state is CheckoutApplyingCouponState;
             if (state is CheckoutLoadingState) {
               return Center(child: Text("Loading..."));
             } else if (state is CheckoutLoadedState) {
@@ -218,7 +219,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 4.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -256,19 +257,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             AppWidget.width(12.0),
                             SizedBox(
                               height: 48,
-                              width: 120,
-                              child: AppButton(
-                                title: "Apply",
-                                isLoading: false,
-                                borderRadius: 10,
-                                backgroundColor: AppColors.toneColor,
-                                onPressed: () {
-                                  if (formKey.currentState != null && formKey.currentState!.validate()) {
-                                  } else {
-                                    AppSnackBar.error("Please enter coupon code");
-                                  }
-                                },
-                              ),
+                              width: 90,
+                              child: isApplyingCoupon
+                                  ? CircularProgressIndicator()
+                                  : AppButton(
+                                      title: "Apply",
+                                      isLoading: false,
+                                      borderRadius: 10,
+                                      backgroundColor: AppColors.toneColor,
+                                      onPressed: () {
+                                        if (formKey.currentState != null && formKey.currentState!.validate()) {
+                                          context.read<CheckoutBloc>().add(CheckoutApplyCouponEvent(
+                                                couponText: couponController.value.text.toString(),
+                                                subTotal: context.read<CheckoutBloc>().calculationSubTotal(state.checkoutProductList),
+                                                checkoutProductList: state.checkoutProductList,
+                                              ));
+                                        } else {
+                                          AppSnackBar.error("Please enter coupon code");
+                                        }
+                                      },
+                                    ),
                             ),
                           ],
                         ),
@@ -291,77 +299,78 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         builder: (context, state) {
           if (state is CheckoutLoadedState) {
             return PriceSummery(
-              buttonTitle: "Checkout",
-              subTotal: context.read<CheckoutBloc>().calculationSubTotal(state.checkoutProductList).toStringAsFixed(2),
+              subTotal: state.finalSubTotal == 0 ? context.read<CheckoutBloc>().calculationSubTotal(state.checkoutProductList).toStringAsFixed(2) : state.finalSubTotal.toStringAsFixed(2),
               youSave: context.read<CheckoutBloc>().discountCalculation(state.checkoutProductList).toStringAsFixed(2),
+              buttonTitle: "Checkout",
+              buttonWidth: 120,
+              buttonCallBack: () => context.pushNamed(AppRoutes.ORDER_CONFIRMATION),
               onTabCallBack: () {
                 showCommonBottomSheet(
                   context: context,
                   title: "Price Summery",
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Base fare",
-                          style: AppTextStyles.regular(),
-                        ),
-                        Text(
-                          context.read<CheckoutBloc>().calculationSubTotal(state.checkoutProductList).toStringAsFixed(2),
-                          style: AppTextStyles.regular(fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                    AppWidget.height(8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Coupon Discount",
-                              style: AppTextStyles.regular(),
-                            ),
-                            DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryColor,
-                                borderRadius: BorderRadius.circular(12),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Base fare",
+                            style: AppTextStyles.regular(),
+                          ),
+                          Text(
+                            "৳${context.read<CheckoutBloc>().calculationSubTotal(state.checkoutProductList).toStringAsFixed(2)}",
+                            style: AppTextStyles.subTitle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      AppWidget.height(8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Coupon Discount",
+                                style: AppTextStyles.regular(),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "AK IJ",
-                                  style: AppTextStyles.regular(fontWeight: FontWeight.w600),
+                              AppWidget.width(8),
+                              DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryLiteColor.withValues(alpha: 0.6),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  child: Text(
+                                    state.appliedCouponCode,
+                                    style: AppTextStyles.regular(fontWeight: FontWeight.w600),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "45.00",
-                          style: AppTextStyles.regular(fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                    AppWidget.height(8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Discount amount",
-                          style: AppTextStyles.regular(),
-                        ),
-                        Text(
-                          context.read<CheckoutBloc>().discountCalculation(state.checkoutProductList).toStringAsFixed(2),
-                          style: AppTextStyles.regular(fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ]),
+                            ],
+                          ),
+                          Text(
+                            "45.00",
+                            style: AppTextStyles.subTitle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      AppWidget.height(8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Discount amount", style: AppTextStyles.regular()),
+                          Text(
+                            "৳${context.read<CheckoutBloc>().discountCalculation(state.checkoutProductList).toStringAsFixed(2)}",
+                            style: AppTextStyles.subTitle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 );
               },
-              buttonCallBack: () => context.pushNamed(AppRoutes.ORDER_CONFIRMATION),
             );
           }
           return SizedBox.shrink();

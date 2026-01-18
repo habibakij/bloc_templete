@@ -20,10 +20,19 @@ class CheckoutLoadingState extends CheckoutState {
 
 class CheckoutLoadedState extends CheckoutState {
   final List<AddToCartModel> checkoutProductList;
-  const CheckoutLoadedState(this.checkoutProductList);
+  final double finalSubTotal;
+  final String appliedCouponCode;
+  const CheckoutLoadedState(this.checkoutProductList, this.finalSubTotal, this.appliedCouponCode);
 
   @override
   List<Object?> get props => [checkoutProductList];
+}
+
+class CheckoutApplyingCouponState extends CheckoutState {
+  const CheckoutApplyingCouponState();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class CheckoutErrorState extends CheckoutState {

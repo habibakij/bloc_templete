@@ -155,9 +155,8 @@ class _CartScreenState extends State<CartScreen> {
             return PriceSummery(
               subTotal: context.read<CartBloc>().calculationSubTotal(state.cartProductList).toStringAsFixed(2),
               youSave: context.read<CartBloc>().discountCalculation(state.cartProductList).toStringAsFixed(2),
-              buttonCallBack: () {
-                context.pushNamed(AppRoutes.CHECKOUT_SCREEN);
-              },
+              buttonWidth: 120,
+              buttonCallBack: () => context.pushNamed(AppRoutes.CHECKOUT_SCREEN),
             );
           }
           return SizedBox.shrink();

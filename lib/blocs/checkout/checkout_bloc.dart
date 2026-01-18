@@ -10,27 +10,43 @@ part 'checkout_state.dart';
 
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   ProductRepository repository;
-
+  String couponCode = "habib";
+  double couponDiscountPercentage = 4.8;
   CheckoutBloc(this.repository) : super(CheckoutInitial()) {
-    on<CheckoutLoadingEvent>(onCartDataLoading);
+    on<CheckoutLoadingEvent>(onCheckoutDataLoading);
+    on<CheckoutApplyCouponEvent>(onCheckoutCouponApply);
   }
 
-  FutureOr<void> onCartDataLoading(CheckoutLoadingEvent event, Emitter<CheckoutState> emit) {
+  /// fetching checkout data
+  FutureOr<void> onCheckoutDataLoading(CheckoutLoadingEvent event, Emitter<CheckoutState> emit) {
     emit(CheckoutLoadingState());
     try {
-      final cartProducts = repository.getCartProducts();
-      emit(CheckoutLoadedState(cartProducts));
+      final checkoutProductList = repository.getCartProducts();
+      emit(CheckoutLoadedState(checkoutProductList, 0, ""));
     } catch (e) {
       emit(CheckoutErrorState(e.toString()));
     }
   }
 
-  /// cart single item price calculation
+  /// applying coupon code
+  FutureOr<void> onCheckoutCouponApply(CheckoutApplyCouponEvent event, Emitter<CheckoutState> emit) {
+    emit(CheckoutApplyingCouponState());
+    if (couponCode == event.couponText) {
+      double subTotal = event.subTotal;
+      double couponDiscountAmount = ((subTotal / 100) * couponDiscountPercentage);
+      double finalSubTotal = subTotal - couponDiscountAmount;
+      emit(CheckoutLoadedState(event.checkoutProductList, finalSubTotal, event.couponText));
+    } else {
+      emit(CheckoutLoadedState(event.checkoutProductList, 0, ""));
+    }
+  }
+
+  /// checkout single list item price calculation
   double cartItemPriceCalculation(double price, int quantity) {
     return price * quantity;
   }
 
-  /// discount calculation
+  /// discount (save) calculation
   double discountCalculation(List<AddToCartModel> cartProductList) {
     int totalQuantity = 0;
     for (var e in cartProductList) {

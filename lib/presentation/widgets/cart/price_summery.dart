@@ -3,14 +3,25 @@ import 'package:flutter_bloc_template/core/theme/app_style.dart';
 import 'package:flutter_bloc_template/core/utils/helper/color_manager.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_button.dart';
 import 'package:flutter_bloc_template/core/utils/widget/app_widget.dart';
+import 'package:flutter_bloc_template/core/utils/widget/snackbar.dart';
 
 class PriceSummery extends StatelessWidget {
-  final String? buttonTitle;
   final String subTotal;
   final String youSave;
+  final String? buttonTitle;
+  final double? buttonWidth;
+  final VoidCallback? buttonCallBack;
   final VoidCallback? onTabCallBack;
-  final VoidCallback buttonCallBack;
-  const PriceSummery({super.key, this.buttonTitle, required this.subTotal, required this.youSave, this.onTabCallBack, required this.buttonCallBack});
+
+  const PriceSummery({
+    super.key,
+    required this.subTotal,
+    required this.youSave,
+    this.buttonTitle,
+    this.buttonWidth,
+    this.buttonCallBack,
+    this.onTabCallBack,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +36,11 @@ class PriceSummery extends StatelessWidget {
               elevation: 4,
               color: AppColors.white,
               child: InkWell(
-                onTap: onTabCallBack,
+                onTap: onTabCallBack ?? () {},
                 borderRadius: BorderRadius.circular(12.0),
                 splashColor: AppColors.primaryColor,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -40,7 +51,7 @@ class PriceSummery extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text("Sub total: ", style: AppTextStyles.regular()),
+                              Text("Sub Total: ", style: AppTextStyles.regular()),
                               AppWidget.width(8),
                               Text("৳$subTotal", style: AppTextStyles.regular(fontWeight: FontWeight.w600)),
                             ],
@@ -49,7 +60,7 @@ class PriceSummery extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text("You save: ", style: AppTextStyles.regular()),
+                              Text("Saved: ", style: AppTextStyles.regular()),
                               AppWidget.width(8),
                               Text("৳$youSave", style: AppTextStyles.regular(fontWeight: FontWeight.w600)),
                             ],
@@ -58,13 +69,16 @@ class PriceSummery extends StatelessWidget {
                       ),
                       SizedBox(
                         height: 44,
-                        width: 130,
+                        width: buttonWidth ?? 100,
                         child: AppButton(
                           title: buttonTitle ?? "Review",
                           isLoading: false,
                           borderRadius: 12,
                           backgroundColor: AppColors.toneColor,
-                          onPressed: buttonCallBack,
+                          onPressed: buttonCallBack ??
+                              () {
+                                AppSnackBar.error("Invalid Request");
+                              },
                         ),
                       ),
                     ],
