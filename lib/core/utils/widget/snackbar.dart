@@ -32,7 +32,7 @@ class AppSnackBar {
   }
 
   static void error(String message) {
-    show(message: message, backgroundColor: AppColors.red);
+    show(message: message, backgroundColor: AppColors.darkRed);
   }
 
   static void info(String message) {

@@ -49,7 +49,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       if (state.cartProductsList.isNotEmpty) {
                         context.pushNamed(AppRoutes.CART_SCREEN);
                       } else {
-                        AppSnackBar.warning("cart empty");
+                        AppSnackBar.warning("Cart is empty. Please add items to your cart and proceed.");
                       }
                     },
                     child: Stack(

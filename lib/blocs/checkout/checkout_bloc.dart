@@ -24,4 +24,30 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       emit(CheckoutErrorState(e.toString()));
     }
   }
+
+  /// cart single item price calculation
+  double cartItemPriceCalculation(double price, int quantity) {
+    return price * quantity;
+  }
+
+  /// discount calculation
+  double discountCalculation(List<AddToCartModel> cartProductList) {
+    int totalQuantity = 0;
+    for (var e in cartProductList) {
+      int quantity = e.quantity ?? 1;
+      totalQuantity = totalQuantity + quantity;
+    }
+    return (totalQuantity * 20);
+  }
+
+  /// calculation sub total price
+  double calculationSubTotal(List<AddToCartModel> cartProductList) {
+    double subTotal = 0;
+    for (var e in cartProductList) {
+      double price = e.productDetailsModel?.price ?? 0;
+      int quantity = e.quantity ?? 1;
+      subTotal = subTotal + (price * quantity);
+    }
+    return subTotal;
+  }
 }
