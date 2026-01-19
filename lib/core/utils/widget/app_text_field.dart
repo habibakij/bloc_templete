@@ -61,8 +61,9 @@ class CommonTextField extends StatelessWidget {
             FocusScope.of(context).unfocus();
           },
       decoration: InputDecoration(
-        labelText: labelText,
+        //labelText: labelText,
         hintText: hintText,
+        hintStyle: AppTextStyles.hintStyle(),
         counterText: "",
         helperText: "",
         helperStyle: AppTextStyles.regular(),

@@ -20,16 +20,23 @@ class CheckoutLoadingState extends CheckoutState {
 
 class CheckoutLoadedState extends CheckoutState {
   final List<AddToCartModel> checkoutProductList;
-  final double finalSubTotal;
+  final double couponDiscountAmount;
   final String appliedCouponCode;
-  const CheckoutLoadedState(this.checkoutProductList, this.finalSubTotal, this.appliedCouponCode);
+  const CheckoutLoadedState({required this.checkoutProductList, required this.couponDiscountAmount, required this.appliedCouponCode});
 
   @override
-  List<Object?> get props => [checkoutProductList];
+  List<Object?> get props => [checkoutProductList, couponDiscountAmount, appliedCouponCode];
 }
 
 class CheckoutApplyingCouponState extends CheckoutState {
   const CheckoutApplyingCouponState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class CheckoutRemoveCouponState extends CheckoutState {
+  const CheckoutRemoveCouponState();
 
   @override
   List<Object?> get props => [];

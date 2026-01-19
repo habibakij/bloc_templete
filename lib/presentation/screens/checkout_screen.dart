@@ -25,6 +25,7 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   var couponController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  bool isCouponProcessing = false;
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       body: SafeArea(
         child: BlocBuilder<CheckoutBloc, CheckoutState>(
           builder: (context, state) {
-            final bool isApplyingCoupon = state is CheckoutApplyingCouponState;
+            //final bool isApplyingCoupon = state is CheckoutApplyingCouponState;
             if (state is CheckoutLoadingState) {
               return Center(child: Text("Loading..."));
             } else if (state is CheckoutLoadedState) {
@@ -134,70 +135,55 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       style: AppTextStyles.regular(fontWeight: FontWeight.w500),
                                     ),
                                     AppWidget.height(2),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            "${item.productDetailsModel?.category}",
-                                            maxLines: 1,
-                                            style: AppTextStyles.hintStyle(),
+                                    Text(
+                                      "${item.productDetailsModel?.category}",
+                                      maxLines: 1,
+                                      style: AppTextStyles.hintStyle(),
+                                    ),
+                                    AppWidget.height(2),
+                                    RichText(
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.start,
+                                      softWrap: true,
+                                      maxLines: 1,
+                                      text: TextSpan(
+                                        text: "seller",
+                                        style: AppTextStyles.regular(),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text: " Cart up",
+                                            style: AppTextStyles.regular(color: AppColors.primaryDarkColor),
                                           ),
-                                        ),
-                                        AppWidget.width(12),
-                                        Expanded(
-                                          flex: 2,
-                                          child: RichText(
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.start,
-                                            softWrap: true,
-                                            maxLines: 1,
-                                            text: TextSpan(
-                                              text: "seller",
-                                              style: AppTextStyles.regular(fontSize: 12),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                  text: " Cart up",
-                                                  style: AppTextStyles.regular(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: AppColors.primaryDarkColor,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                     AppWidget.height(4),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
                                           children: [
                                             Text(
                                               "৳${context.read<CartBloc>().cartItemPriceCalculation(item.productDetailsModel?.price ?? 0, item.quantity ?? 1).toStringAsFixed(2)}",
-                                              style: AppTextStyles.title(fontSize: 16, color: AppColors.primaryDarkColor),
+                                              style: AppTextStyles.regular(fontWeight: FontWeight.w500, color: AppColors.primaryDarkColor),
                                             ),
                                             AppWidget.width(2),
                                             Padding(
                                               padding: const EdgeInsets.only(top: 2.0),
                                               child: Text(
                                                 "৳${(context.read<CheckoutBloc>().cartItemPriceCalculation(item.productDetailsModel?.price ?? 0, item.quantity ?? 1) + 20).toStringAsFixed(2)}",
-                                                style: AppTextStyles.discountStrikeStyle(fontSize: 10),
+                                                style: AppTextStyles.discountStrikeStyle(),
                                               ),
                                             ),
                                           ],
                                         ),
-                                        AppWidget.width(12),
                                         RichText(
                                           overflow: TextOverflow.ellipsis,
                                           textAlign: TextAlign.start,
                                           softWrap: true,
                                           maxLines: 1,
                                           text: TextSpan(
-                                            text: "Q:",
+                                            text: "QTY:",
                                             style: AppTextStyles.regular(),
                                             children: <TextSpan>[
                                               TextSpan(
@@ -219,7 +205,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 4.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(bottom: 8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -233,50 +219,82 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
-                              child: Form(
-                                key: formKey,
-                                child: CommonTextField(
-                                  controller: couponController,
-                                  labelText: "Apply coupon code",
-                                  hintText: "Enter coupon code",
-                                  keyboardType: TextInputType.text,
-                                  contentPadding: EdgeInsets.zero,
-                                  prefixIcon: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset(couponIcon, height: 20, width: 30, fit: BoxFit.fill),
-                                  ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return "Coupon code required";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
+                              child: state.appliedCouponCode.isNotEmpty && !isCouponProcessing
+                                  ? DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        color: AppColors.greyLiteBorder,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+                                        child: Text(
+                                          state.appliedCouponCode,
+                                          style: AppTextStyles.regular(fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    )
+                                  : Form(
+                                      key: formKey,
+                                      child: CommonTextField(
+                                        controller: couponController,
+                                        hintText: "Enter coupon code",
+                                        keyboardType: TextInputType.text,
+                                        contentPadding: EdgeInsets.zero,
+                                        prefixIcon: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.asset(couponIcon, height: 20, width: 30, fit: BoxFit.fill),
+                                        ),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return "Coupon code required";
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
                             ),
                             AppWidget.width(12.0),
                             SizedBox(
                               height: 48,
                               width: 90,
-                              child: isApplyingCoupon
-                                  ? CircularProgressIndicator()
-                                  : AppButton(
-                                      title: "Apply",
-                                      isLoading: false,
-                                      borderRadius: 10,
-                                      backgroundColor: AppColors.toneColor,
-                                      onPressed: () {
-                                        if (formKey.currentState != null && formKey.currentState!.validate()) {
-                                          context.read<CheckoutBloc>().add(CheckoutApplyCouponEvent(
-                                                couponText: couponController.value.text.toString(),
-                                                subTotal: context.read<CheckoutBloc>().calculationSubTotal(state.checkoutProductList),
-                                                checkoutProductList: state.checkoutProductList,
-                                              ));
-                                        } else {
-                                          AppSnackBar.error("Please enter coupon code");
-                                        }
-                                      },
-                                    ),
+                              child: isCouponProcessing
+                                  ? DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: AppColors.toneColor,
+                                      ),
+                                      child: Center(
+                                        child: CircularProgressIndicator(color: AppColors.primaryColor),
+                                      ),
+                                    )
+                                  : state.appliedCouponCode.isNotEmpty
+                                      ? AppButton(
+                                          title: "Remove",
+                                          isLoading: false,
+                                          borderRadius: 10,
+                                          backgroundColor: AppColors.toneColor,
+                                          onPressed: () async {},
+                                        )
+                                      : AppButton(
+                                          title: "Apply",
+                                          isLoading: false,
+                                          borderRadius: 10,
+                                          backgroundColor: AppColors.toneColor,
+                                          onPressed: () async {
+                                            if (formKey.currentState != null && formKey.currentState!.validate()) {
+                                              setState(() => isCouponProcessing = true);
+                                              context.read<CheckoutBloc>().add(CheckoutApplyCouponEvent(
+                                                    couponText: couponController.value.text.toString(),
+                                                    subTotal: context.read<CheckoutBloc>().calculationSubTotal(checkoutProductList: state.checkoutProductList, couponDiscountAmount: state.couponDiscountAmount),
+                                                    checkoutProductList: state.checkoutProductList,
+                                                  ));
+                                              await Future.delayed(const Duration(milliseconds: 1000));
+                                              setState(() => isCouponProcessing = false);
+                                            } else {
+                                              AppSnackBar.error("Please enter coupon code");
+                                            }
+                                          },
+                                        ),
                             ),
                           ],
                         ),
@@ -299,7 +317,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         builder: (context, state) {
           if (state is CheckoutLoadedState) {
             return PriceSummery(
-              subTotal: state.finalSubTotal == 0 ? context.read<CheckoutBloc>().calculationSubTotal(state.checkoutProductList).toStringAsFixed(2) : state.finalSubTotal.toStringAsFixed(2),
+              subTotal: context.read<CheckoutBloc>().calculationSubTotal(checkoutProductList: state.checkoutProductList, couponDiscountAmount: state.couponDiscountAmount).toStringAsFixed(2),
               youSave: context.read<CheckoutBloc>().discountCalculation(state.checkoutProductList).toStringAsFixed(2),
               buttonTitle: "Checkout",
               buttonWidth: 120,
@@ -318,49 +336,48 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             style: AppTextStyles.regular(),
                           ),
                           Text(
-                            "৳${context.read<CheckoutBloc>().calculationSubTotal(state.checkoutProductList).toStringAsFixed(2)}",
+                            "৳${context.read<CheckoutBloc>().calculationSubTotal(checkoutProductList: state.checkoutProductList, couponDiscountAmount: 0).toStringAsFixed(2)}",
                             style: AppTextStyles.subTitle(fontSize: 16),
                           ),
                         ],
                       ),
-                      AppWidget.height(8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Coupon Discount",
-                                style: AppTextStyles.regular(),
-                              ),
-                              AppWidget.width(8),
-                              DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: AppColors.primaryLiteColor.withValues(alpha: 0.6),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                  child: Text(
-                                    state.appliedCouponCode,
-                                    style: AppTextStyles.regular(fontWeight: FontWeight.w600),
+                      if (state.appliedCouponCode.isNotEmpty) ...[
+                        AppWidget.height(8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("Coupon Discount", style: AppTextStyles.regular()),
+                                AppWidget.width(8),
+                                DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryLiteColor.withValues(alpha: 0.6),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    child: Text(
+                                      state.appliedCouponCode,
+                                      style: AppTextStyles.regular(fontWeight: FontWeight.w600),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "45.00",
-                            style: AppTextStyles.subTitle(fontSize: 16),
-                          ),
-                        ],
-                      ),
+                              ],
+                            ),
+                            Text(
+                              state.couponDiscountAmount.toStringAsFixed(2),
+                              style: AppTextStyles.subTitle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ],
                       AppWidget.height(8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Discount amount", style: AppTextStyles.regular()),
+                          Text("Flat 20(BDT) save", style: AppTextStyles.regular()),
                           Text(
                             "৳${context.read<CheckoutBloc>().discountCalculation(state.checkoutProductList).toStringAsFixed(2)}",
                             style: AppTextStyles.subTitle(fontSize: 16),

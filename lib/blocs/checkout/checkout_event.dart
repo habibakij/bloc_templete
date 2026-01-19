@@ -21,3 +21,9 @@ class CheckoutApplyCouponEvent extends CheckoutEvent {
     required this.checkoutProductList,
   });
 }
+
+class CheckoutRemoveCouponEvent extends CheckoutEvent {
+  final double couponDiscountAmount;
+  final List<AddToCartModel> checkoutProductList;
+  const CheckoutRemoveCouponEvent(this.couponDiscountAmount, this.checkoutProductList);
+}

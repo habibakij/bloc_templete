@@ -52,8 +52,8 @@ class PriceSummery extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text("Sub Total: ", style: AppTextStyles.regular()),
-                              AppWidget.width(8),
-                              Text("৳$subTotal", style: AppTextStyles.regular(fontWeight: FontWeight.w600)),
+                              AppWidget.width(4),
+                              Text("৳$subTotal", style: AppTextStyles.regular(color: AppColors.primaryDarkColor, fontWeight: FontWeight.w500)),
                             ],
                           ),
                           AppWidget.height(4),
@@ -61,8 +61,8 @@ class PriceSummery extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text("Saved: ", style: AppTextStyles.regular()),
-                              AppWidget.width(8),
-                              Text("৳$youSave", style: AppTextStyles.regular(fontWeight: FontWeight.w600)),
+                              AppWidget.width(4),
+                              Text("৳$youSave", style: AppTextStyles.regular(color: AppColors.primaryDarkColor, fontWeight: FontWeight.w500)),
                             ],
                           ),
                         ],
