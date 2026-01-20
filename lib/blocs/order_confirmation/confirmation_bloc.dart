@@ -10,9 +10,12 @@ part 'confirmation_state.dart';
 class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
   ProductRepository repository;
   ConfirmationBloc(this.repository) : super(ConfirmationInitialState()) {
+    on<ConfirmationInitEvent>(onConfirmationRegister);
     on<CartClearEvent>(onCartClear);
     on<AddToOrderEvent>(onAddToOrder);
   }
+
+  FutureOr<void> onConfirmationRegister(ConfirmationInitEvent event, Emitter<ConfirmationState> emit) {}
 
   Future<void> onCartClear(CartClearEvent event, Emitter<ConfirmationState> emit) async {
     emit(CartClearingState());
@@ -21,8 +24,8 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
   }
 
   FutureOr<void> onAddToOrder(AddToOrderEvent event, Emitter<ConfirmationState> emit) {
-    emit(CartClearingState());
+    emit(OrderSavingState());
     repository.addToOrder();
-    emit(AddToOrderState());
+    emit(OrderSavedState());
   }
 }

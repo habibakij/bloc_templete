@@ -6,6 +6,10 @@ sealed class ConfirmationEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class ConfirmationInitEvent extends ConfirmationEvent {
+  const ConfirmationInitEvent();
+}
+
 class CartClearEvent extends ConfirmationEvent {
   const CartClearEvent();
 }

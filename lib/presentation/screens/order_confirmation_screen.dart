@@ -17,45 +17,53 @@ class OrderConfirmationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(title: "Order Confirmed", leadingVisibility: false),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(correctIcon, height: 120, width: 120, fit: BoxFit.cover),
-            Text("Recorded", style: AppTextStyles.title()),
-            AppWidget.height(8.0),
-            Text(
-              "Your order has been recorded, you will get confirmation very soon thank you.",
-              textAlign: TextAlign.center,
-              style: AppTextStyles.regular(),
-            ),
-            AppWidget.height(24.0),
-            AppButton(
-              height: 40,
-              title: "Home",
-              isLoading: false,
-              borderRadius: 20,
-              backgroundColor: AppColors.toneColor,
-              onPressed: () {
-                context.read<ConfirmationBloc>().add(CartClearEvent());
-                context.pushNamed(AppRoutes.HOME_SCREEN);
-              },
-            ),
-            AppWidget.height(8.0),
-            AppButton(
-              height: 40,
-              title: "My Order",
-              isLoading: false,
-              borderRadius: 20,
-              backgroundColor: AppColors.primaryColor,
-              onPressed: () {
-                context.read<ConfirmationBloc>().add(AddToOrderEvent());
-                context.pushNamed(AppRoutes.MY_ORDER);
-              },
-            ),
-          ],
+      body: BlocListener<ConfirmationBloc, ConfirmationState>(
+        listener: (context, state) {
+          if (state is CartClearedState) {
+            context.pushNamed(AppRoutes.HOME_SCREEN);
+          }
+          if (state is OrderSavedState) {
+            context.pushNamed(AppRoutes.MY_ORDER);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(correctIcon, height: 120, width: 120, fit: BoxFit.cover),
+              Text("Recorded", style: AppTextStyles.title()),
+              AppWidget.height(8.0),
+              Text(
+                "Your order has been recorded, you will get confirmation very soon thank you.",
+                textAlign: TextAlign.center,
+                style: AppTextStyles.regular(),
+              ),
+              AppWidget.height(24.0),
+              AppButton(
+                height: 40,
+                title: "Home",
+                isLoading: false,
+                borderRadius: 20,
+                backgroundColor: AppColors.toneColor,
+                onPressed: () {
+                  context.read<ConfirmationBloc>().add(CartClearEvent());
+                },
+              ),
+              AppWidget.height(8.0),
+              AppButton(
+                height: 40,
+                title: "My Order",
+                isLoading: false,
+                borderRadius: 20,
+                backgroundColor: AppColors.primaryColor,
+                onPressed: () {
+                  context.read<ConfirmationBloc>().add(AddToOrderEvent());
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

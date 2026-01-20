@@ -11,8 +11,8 @@ Future<T?> showCommonBottomSheet<T>({
   required Widget child,
   String? leftButtonTitle,
   String? rightButtonTitle,
-  VoidCallback? leftCallBack,
-  VoidCallback? rightCallBack,
+  VoidCallback? leftButtonCallBack,
+  VoidCallback? rightButtonCallBack,
   bool isDismissible = true,
   bool enableDrag = true,
 }) {
@@ -28,14 +28,8 @@ Future<T?> showCommonBottomSheet<T>({
         title: title,
         leftButtonTitle: leftButtonTitle ?? "Cancel",
         rightButtonTitle: rightButtonTitle ?? "Continue",
-        leftCallBack: leftCallBack ??
-            () {
-              Navigator.maybePop(context);
-            },
-        rightCallBack: rightCallBack ??
-            () {
-              Navigator.maybePop(context);
-            },
+        leftButtonCallBack: leftButtonCallBack ?? () => Navigator.maybePop(context),
+        rightButtonCallBack: rightButtonCallBack ?? () => Navigator.maybePop(context),
         child: child,
       );
     },
@@ -47,8 +41,8 @@ class CommonBottomSheet extends StatelessWidget {
   final Widget child;
   final String leftButtonTitle;
   final String rightButtonTitle;
-  final VoidCallback leftCallBack;
-  final VoidCallback rightCallBack;
+  final VoidCallback leftButtonCallBack;
+  final VoidCallback rightButtonCallBack;
 
   const CommonBottomSheet({
     super.key,
@@ -56,8 +50,8 @@ class CommonBottomSheet extends StatelessWidget {
     required this.child,
     required this.leftButtonTitle,
     required this.rightButtonTitle,
-    required this.leftCallBack,
-    required this.rightCallBack,
+    required this.leftButtonCallBack,
+    required this.rightButtonCallBack,
   });
 
   @override
@@ -85,7 +79,6 @@ class CommonBottomSheet extends StatelessWidget {
               child: child,
             ),
             AppWidget.height(12),
-            Divider(height: 1, color: AppColors.greyLiteBorder),
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Row(
@@ -97,7 +90,7 @@ class CommonBottomSheet extends StatelessWidget {
                       isLoading: false,
                       borderRadius: 10,
                       backgroundColor: AppColors.toneColor,
-                      onPressed: leftCallBack,
+                      onPressed: leftButtonCallBack,
                     ),
                   ),
                   AppWidget.width(16),
@@ -108,7 +101,7 @@ class CommonBottomSheet extends StatelessWidget {
                       isLoading: false,
                       borderRadius: 10,
                       backgroundColor: AppColors.primaryColor,
-                      onPressed: rightCallBack,
+                      onPressed: rightButtonCallBack,
                     ),
                   ),
                 ],

@@ -6,6 +6,7 @@ import 'package:flutter_bloc_template/blocs/details/details_bloc.dart';
 import 'package:flutter_bloc_template/blocs/home/home_bloc.dart';
 import 'package:flutter_bloc_template/blocs/my_order/order_bloc.dart';
 import 'package:flutter_bloc_template/blocs/order_confirmation/confirmation_bloc.dart';
+import 'package:flutter_bloc_template/blocs/price_summery/price_summery_bloc.dart';
 import 'package:flutter_bloc_template/blocs/splash/splash_cubit.dart';
 import 'package:flutter_bloc_template/core/navigation/app_router.dart';
 import 'package:flutter_bloc_template/core/theme/app_theme.dart';
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => DetailsBloc(context.read<ProductRepository>())..add(ProductDetailsRegisterEvent())),
           BlocProvider(create: (context) => CartBloc(context.read<ProductRepository>())..add(CartLoadingEvent())),
           BlocProvider(create: (context) => CheckoutBloc(context.read<ProductRepository>())..add(CheckoutLoadingEvent())),
-          BlocProvider(create: (context) => ConfirmationBloc(context.read<ProductRepository>())..add(CartClearEvent())),
+          BlocProvider(create: (context) => PriceSummaryBloc()),
+          BlocProvider(create: (context) => ConfirmationBloc(context.read<ProductRepository>())..add(ConfirmationInitEvent())),
           BlocProvider(create: (context) => OrderBloc(context.read<ProductRepository>())..add(OrderLoadingEvent())),
         ],
         child: MaterialApp.router(
