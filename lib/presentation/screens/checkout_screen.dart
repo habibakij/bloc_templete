@@ -100,8 +100,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: Text("Buying (${state.checkoutProductList.length})", style: AppTextStyles.subTitle()),
+                            padding: const EdgeInsets.only(left: 12.0, bottom: 8.0),
+                            child: Text("Ready to buy (${state.checkoutProductList.length})", style: AppTextStyles.subTitle()),
                           ),
                           Expanded(
                             child: ListView.separated(
@@ -241,6 +241,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        AppWidget.height(8.0),
                         Text(
                           "Apply coupon code",
                           style: AppTextStyles.regular(),
